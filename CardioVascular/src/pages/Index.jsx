@@ -650,46 +650,46 @@ function Index() {
 
     return (
         <div>
-<header className="header">
-    <div className="logo-container">
-        <button className="logo-text" type="button" onClick={refresh}>
-            CardioVascularView
-        </button>
-    </div>
-    
-    <div className="title-container">
-        <h2 className="main-title">
-            Prevalence Rate of Cardiovascular Diseases Global
-        </h2>
-    </div>
+            <header className="header">
+                <div className="logo-container">
+                    <button className="logo-text" type="button" onClick={refresh}>
+                        CardioVascularView
+                    </button>
+                </div>
 
-    <div className="menu-container">
-        <nav className="menu">
-            <ul className="menu-list">
-                <li className="menu-item">
-                    <NavLink to="/" className={({ isActive }) => isActive ? "menu-link active" : "menu-link"}>
-                        World Map
-                    </NavLink>
-                </li>
-                <li className="menu-item">
-                    <NavLink to="/uk" className={({ isActive }) => isActive ? "menu-link active" : "menu-link"}>
-                        UK Map
-                    </NavLink>
-                </li>
-                <li className="menu-item">
-                    <NavLink to="/usa" className={({ isActive }) => isActive ? "menu-link active" : "menu-link"}>
-                        USA Map
-                    </NavLink>
-                </li>
-                <li className="menu-item">
-                    <NavLink to="/about" className={({ isActive }) => isActive ? "menu-link active" : "menu-link"}>
-                        About
-                    </NavLink>
-                </li>
-            </ul>
-        </nav>
-    </div>
-</header>
+                <div className="title-container">
+                    <h2 className="main-title">
+                        Prevalence Rate of Cardiovascular Diseases Global
+                    </h2>
+                </div>
+
+                <div className="menu-container">
+                    <nav className="menu">
+                        <ul className="menu-list">
+                            <li className="menu-item">
+                                <NavLink to="/" className="menu-link" activeClassName="active">
+                                    World Map
+                                </NavLink>
+                            </li>
+                            <li className="menu-item">
+                                <NavLink to="/uk" className="menu-link" activeClassName="active">
+                                    UK Map
+                                </NavLink>
+                            </li>
+                            <li className="menu-item">
+                                <NavLink to="/usa" className="menu-link" activeClassName="active">
+                                    USA Map
+                                </NavLink>
+                            </li>
+                            <li className="menu-item">
+                                <NavLink to="/about" className="menu-link" activeClassName="active">
+                                    About
+                                </NavLink>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </header>
 
             {/* Hidden section for testing content */}
             <section className="testing" style={{ display: "none" }}>

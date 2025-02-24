@@ -284,12 +284,13 @@ svg path:hover {
 /* The box the graph pops up in */
 .info_graf {
     height: 300px;
-    width: 400px;
+    width: 100%;
     border: var(--lightgray), solid, 3px;
     border-radius: 7px;
-    position: absolute;
+    position: relative;
     left: 50%;
     bottom: 13px;
+    top: 13px;
     transform: translateX(-50%);
     border-color: transparent;
 }

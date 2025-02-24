@@ -7,7 +7,7 @@ const Footer = () => {
             <div className="footer-container">
                 {/* Image Link */}
 
-                <img src="/JGU_end.PNG" alt="JGU Logo" className="footer-logo" />
+                <img src="/JGU end.PNG" alt="JGU Logo" className="footer-logo" />
 
                 {/* Text Section */}
                 <div className="footer-text">
