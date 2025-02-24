@@ -1,0 +1,21 @@
+services:
+  react-app:
+    container_name: cardiovascularmap
+    image: cardiovascularmap:2.0.0
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - ":80"
+    networks:
+      - compute_network
+      - reverseproxy_network
+    restart: unless-stopped
+
+networks:
+  reverseproxy_network:
+    name: reverseproxy_network
+    external: true
+  compute_network:
+    name: compute_network
+    external: true

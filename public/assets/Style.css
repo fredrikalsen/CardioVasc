@@ -1,0 +1,574 @@
+/* color variablas */
+:root {
+    --lightestgray: #c2c4c5;
+    --lightgray: #686D76;
+    --darkgray: #373A40;
+    --green: #DC5F00;
+    --white: #EEEEEE;
+}
+
+
+/* Setting a standard margin, padding and box sizing to border box */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Disable shadows and outlines */
+input:focus,
+button:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+
+
+/* Giving the body and html element 100dvh */
+body,
+html {
+    height: 100dvh;
+}
+
+
+/* Header section */
+header {
+    display: flex;
+    background-color: var(--lightgray);
+    justify-content: left;
+    height: 79px;
+    background-image: url('favicon.png');
+    background-repeat: no-repeat;
+    background-size: 60px;
+    background-position: 40px;
+    background-position-y: center;
+    position: relative;
+}
+
+header .butt {
+    display: flex;
+}
+
+.btn {
+    border: none;
+    height: 79px;
+    text-align: center;
+    background-color: transparent;
+    color: var(--white);
+    width: 130px;
+    font-size: 0.95rem;
+    font-weight: bold;
+}
+
+.active {
+    background-color: var(--darkgray);
+}
+
+.btn:hover {
+    cursor: pointer;
+}
+
+.btn:not(.active):hover {
+    color: var(--green);
+    text-shadow: 0px 0px 5px var(--green);
+}
+
+.pageName {
+    color: var(--white);
+    border: none;
+    background-color: transparent;
+    font-size: 1.5em;
+    font-weight: bold;
+    position: absolute;
+    top: 50%;
+    left: 10%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+.pageName:hover {
+    color: var(--green);
+}
+
+.tagline {
+    color: var(--white);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+/* Main menu section. Main menu is currently set to display: none; in the jsx file */
+.main_menu {
+    background-color: green;
+    height: calc(100dvh - 79px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.p_main_menu {
+    color: black;
+    font-size: larger;
+}
+
+
+/* Testing menu section. Testing menu is currently set to display: none; in the jsx file */
+.testing {
+    background-color: yellow;
+    height: calc(100dvh - 79px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.p_testing {
+    color: black;
+    font-size: larger;
+}
+
+
+/* The Diseases section */
+
+/* The screen size itself */
+.container {
+    display: block;
+    text-align: center;
+    /* Disable flexbox */
+    background-color: var(--white);
+    padding: 20px;
+    height: auto;
+    width: 100%;
+}
+
+/* The box the map is in */
+.map {
+    display: inline-block;
+    vertical-align: top;
+    width: 1030px;
+    background-color: var(--lightestgray);
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    position: relative;
+    /* Manually position within the container */
+
+    margin: 10px;
+    /* Adjust as needed */
+    height: 80vh;
+}
+
+svg {
+    padding-top: 10px;
+}
+
+/* The styling for the map */
+svg path {
+    fill: var(--lightgray);
+    stroke: #eee;
+    stroke-width: .25;
+}
+
+svg path:hover {
+    fill: var(--green);
+    transition: 0.6s;
+    cursor: pointer;
+}
+
+.highlight {
+    fill: var(--green);
+    outline: none;
+}
+
+/* The box for the graph and the search bar */
+.information {
+    display: inline-block;
+    vertical-align: top;
+    width: 480px;
+    background-color: var(--lightestgray);
+    border-radius: 10px;
+    border: 1px solid transparent;
+    /* Standardize borders */
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    position: relative;
+    margin: 10px;
+    height: 80vh;
+}
+
+
+/* Search box responsiveness */
+.search-box {
+    width: 100%;
+    max-width: 400px;
+    margin: 10px auto;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+#input-box {
+    flex: 1;
+    height: 30px;
+    background: transparent;
+    border: 0;
+    outline: 0;
+    font-size: 18px;
+    color: #333;
+}
+
+.magni-button {
+    background: transparent;
+    border: 0;
+    outline: 0;
+}
+
+.magni-button .fa-solid {
+    width: 20px;
+    color: #555;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+::placeholder {
+    color: #555;
+}
+
+/* The box that pops upp when you focus on the search box */
+.result-box {
+    max-height: 250px;
+    overflow-y: scroll;
+    background: var(--white);
+    width: 400px;
+    border: var(--lightgray);
+    border-radius: 10px;
+    border-color: transparent;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+}
+
+.result-box::-webkit-scrollbar {
+    width: 15px;
+}
+
+.result-box::-webkit-scrollbar-track {
+    display: none;
+}
+
+.result-box::-webkit-scrollbar-thumb {
+    background: var(--darkgray);
+    border-radius: 10px;
+}
+
+.result-box ul {
+    border-top: 1px solid #999;
+    padding: 15px 10px;
+}
+
+.result-box ul li {
+    list-style: none;
+    border-radius: 3px;
+    padding: 15px 10px;
+    cursor: pointer;
+}
+
+.result-box ul li:hover {
+    background: #e9f3ff;
+}
+
+
+/* The box the graph pops up in */
+.info_graf {
+    height: 300px;
+    width: 100%;
+    border: var(--lightgray), solid, 3px;
+    border-radius: 7px;
+    position: relative;
+    left: 50%;
+    bottom: 13px;
+    top: 13px;
+    transform: translateX(-50%);
+    border-color: transparent;
+}
+
+/* Styling for the paraghraphs */
+.p_source {
+    font-size: small;
+    color: var(--lightgray);
+    padding-left: 13.5px;
+}
+
+.p_source_text {
+    font-size: 10px;
+    color: var(--lightgray);
+    text-align: center;
+}
+
+.before_graph_text {
+    color: var(--darkgray);
+    text-align: center;
+    font-size: 0.869rem;
+    padding: 5px;
+    border-color: transparent;
+}
+
+/* World Graph */
+.worldGrafBox {
+    height: 250px;
+    width: 100%;
+    /* Ensure it takes the full width of the parent */
+    border: var(--lightgray), solid, 3px;
+    border-radius: 7px;
+    margin: 0 auto;
+    border-color: transparent;
+}
+
+.year-filter {
+    position: absolute;
+    right: 10px;
+    top: 17px;
+    border-radius: 5px;
+    background-color: whitesmoke;
+
+}
+
+.year-filter input {
+    padding: 18px 7px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    width: 219px;
+    margin: 3px 1px;
+}
+
+#fa-magnifying-glass {
+    margin: 3px 7px;
+}
+
+.min-rate {
+    fill: yellow !important;
+    /* Highlight with yellow for minimum rate */
+}
+
+.max-rate {
+    fill: red !important;
+    /* Highlight with red for maximum rate */
+}
+
+/* Gradient scale adjustments */
+.gradient-legend {
+    position: absolute;
+    margin: 10px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f9f9f9;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 300px;
+    left: 20px;
+    bottom: 20px;
+}
+
+.legend-title {
+    font-weight: bold;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.gradient-bar {
+    width: 200px;
+    height: 15px;
+    background: linear-gradient(to right, yellow, red);
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.legend-labels {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.legend-labels span {
+    font-size: 12px;
+    color: #555;
+}
+
+.dynamic-labels {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.dynamic-labels span {
+    font-size: 12px;
+    font-weight: bold;
+    color: #333;
+}
+
+
+
+/* Mobile and tablet size adjustments*/
+@media (max-width: 1607px) {
+    .container {
+        display: block;
+        text-align: center;
+        /* Disable flexbox */
+        background-color: var(--white);
+        padding: 0px;
+        height: auto;
+        width: 100%;
+    }
+
+    .map {
+        width: 67%;
+        left: 20px;
+        height: 100vh;
+        margin: 0;
+    }
+
+    .information {
+        width: 32%;
+        height: 100vh;
+        margin: 0;
+    }
+
+    canvas {
+        box-sizing: border-box;
+        display: block;
+        height: 200px;
+        width: 384px;
+    }
+
+    .gradient-legend {
+        width: 250px;
+        left: 5px;
+        bottom: 3px;
+    }
+
+    .worldGrafBox {
+        height: 223px;
+        width: 91%;
+    }
+}
+
+@media (max-width: 1903px) {
+    .country-rate {
+        margin-top: 40px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .information {
+        width: 90%;
+        /* Take most of the width */
+        left: 5%;
+        /* Center horizontally */
+        top: 20px;
+        /* Adjust vertical positioning */
+    }
+
+    .map {
+        width: 90%;
+        /* Take most of the width */
+        left: 5%;
+        /* Center horizontally */
+        top: calc(100% + 20px);
+        /* Position below the information */
+    }
+
+    .worldGrafBox {
+        height: 250px;
+        width: 70%;
+        /* Ensure it takes the full width of the parent */
+        border: var(--lightgray), solid, 3px;
+        border-radius: 7px;
+        margin: 0 auto;
+        /* Center the section */
+    }
+}
+
+/* For screens smaller than 768px (mobile devices) */
+@media (max-width: 768px) {
+    .pageName {
+        left: 10%;
+        font-size: 18px;
+        /* Adjust horizontal positioning */
+    }
+
+    .tagline {
+        left: 70%;
+        font-size: 12px;
+        /* Adjust horizontal positioning */
+    }
+
+    .search-box {
+        width: 90%;
+        /* Full width */
+        left: 5%;
+        /* Align to the left */
+        top: 100%;
+        /* Position below the search box */
+    }
+
+
+
+    .worldGrafBox {
+        height: 250px;
+        width: 80%;
+        /* Ensure it takes the full width of the parent */
+        border-radius: 7px;
+        margin: 0 auto;
+        border-color: transparent;
+    }
+
+    canvas canvas img {
+        width: 100%;
+        height: 170px;
+        /* Full width */
+        left: 0;
+        /* Align to the left */
+        top: 20px;
+        /* Adjust vertical positioning */
+        padding: 15px;
+        /* Reduce padding for smaller screens */
+    }
+
+    .information {
+        width: 100%;
+        /* Full width */
+        left: 0;
+        /* Align to the left */
+        top: 0;
+        /* Adjust vertical positioning */
+        padding: 0px;
+        /* Reduce padding for smaller screens */
+    }
+
+    .map {
+        width: 100%;
+        /* Full width */
+        left: 0;
+        /* Align to the left */
+        top: calc(100% + 20px);
+        /* Position below the information */
+        padding: 15px;
+        /* Reduce padding for smaller screens */
+        margin-top: 50px;
+    }
+
+    .gradient-legend {
+        width: 50%;
+        left: 5px;
+        bottom: 3px;
+    }
+
+
+}

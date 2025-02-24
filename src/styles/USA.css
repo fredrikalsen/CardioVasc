@@ -1,0 +1,138 @@
+.usa-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.usa-content-wrapper {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: 2rem;
+  padding: 2rem;
+  background-color: #EEEEEE;
+}
+
+.controls-card {
+  background: #d5dcdfb4;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  color: #202227;
+}
+
+.dropdown-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.styled-dropdown {
+  width: 100%;
+  color: #202227;
+  padding: 0.8rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: white;
+  transition: border-color 0.3s ease;
+  cursor: pointer;
+}
+
+.dropdown-container {
+  position: relative;
+}
+
+.dropdown-container::after {
+  content: "";
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+  pointer-events: none;
+}
+
+.styled-dropdown:hover {
+  border-color: #4a90e2;
+}
+
+.stats-card {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1.5rem;
+}
+
+.rate-display {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.rate-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+.rate-unit {
+  font-size: 1rem;
+  color: #7f8c8d;
+}
+
+
+.leaflet-control-attribution {
+  display: none;
+}
+
+
+.map-section {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.leaflet-container {
+  height: 70vh;
+  width: 100%;
+}
+
+.map-popup {
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.popup-content {
+  text-align: center;
+}
+
+.popup-rate {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0.5rem 0;
+}
+
+.map-instruction {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+  .usa-content-wrapper {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+  }
+  
+  .controls-card {
+    margin-bottom: 2rem;
+  }
+  
+  .leaflet-container {
+    height: 50vh;
+  }
+}

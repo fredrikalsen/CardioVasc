@@ -1,0 +1,236 @@
+.about-wrapper {
+    background-color: white;
+    min-height: 100vh;
+  }
+  
+  .about-hero {
+    background: linear-gradient(to bottom, #EEEEEE, #EEEEEE);
+    height: 320px;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .hero-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 20px;
+    color: #202227;
+    position: relative;
+    z-index: 2;
+    text-align: center;
+  }
+  
+  .hero-content h1 {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -1px;
+  }
+  
+  .hero-content p {
+    font-size: 1.4rem;
+    opacity: 0.9;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+  
+  .hero-pattern {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 50%);
+    opacity: 0.4;
+  }
+  
+  .hero-pattern::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.1) 25%, transparent 25%),
+                      linear-gradient(-45deg, rgba(255, 255, 255, 0.1) 25%, transparent 25%);
+    background-size: 60px 60px;
+    opacity: 0.1;
+  }
+  
+  .main-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+  
+  .main-content h2 {
+    text-align: center;
+    color: #202227;
+    font-size: 2rem;
+    margin: 60px 0 40px;
+  }
+  
+  .conditions-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(320px, 1fr));
+    gap: 30px;
+    padding: 20px 0;
+    justify-content: center;
+  }
+  
+  .conditions-grid::after {
+    content: "";
+    grid-column: span 1;
+  }
+  .condition-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .condition-card:hover {
+    
+  }
+  
+  .card-icon {
+    padding: 20px;
+    background-color: #202227;
+  }
+  
+  .card-icon span {
+    color: #e2e8f0;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+  
+  .card-content {
+    padding: 25px;
+    flex-grow: 1;
+  }
+  
+  .card-content h3 {
+    color: #202227;
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+  }
+  
+  .card-content p {
+    color: #202227;
+    line-height: 1.6;
+  }
+  
+  .card-footer {
+    padding: 20px;
+    border-top: 1px solid #e2e8f0;
+  }
+  
+  .read-more {
+    background: none;
+    border: none;
+    color: #2c3e50;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.3s;
+    padding: 0;
+  }
+  
+  .read-more:hover {
+    opacity: 0.7;
+  }
+
+  .data-source-card {
+    background: white;
+    border-radius: 16px;
+    padding: 40px;
+    margin-top: 80px;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid #20222736;
+  }
+  
+  .data-source-card:hover {
+
+  }
+  
+  .data-source-card h3 {
+    color: #202227;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+  }
+  
+  .data-source-card p {
+    color: #202227;
+    line-height: 1.8;
+    margin-bottom: 25px;
+    font-size: 1.1rem;
+  }
+  
+  .data-source-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .data-source-card li {
+    color: #202227;
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    font-size: 1.1rem;
+    transition: padding 0.3s ease;
+    display: flex;
+    align-items: center;
+  }
+  
+ 
+  
+
+  
+  .data-source-card li:last-child {
+    border-bottom: none;
+  }
+  
+  @media (max-width: 768px) {
+    .hero-content h1 {
+      font-size: 2.5rem;
+    }
+
+    .hero-content p {
+        font-size: 1.1rem;
+      }
+    
+    .conditions-grid {
+      grid-template-columns: 1fr;
+      padding: 10px;
+    }
+    
+    .main-content {
+      padding: 20px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .conditions-grid > *:nth-last-child(2):nth-child(3n + 1),
+    .conditions-grid > *:last-child:nth-child(3n + 2) {
+      transform: translateX(50%);
+    }
+  }
+  
+  @media (max-width: 1024px) {
+    .conditions-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .conditions-grid {
+      grid-template-columns: 1fr;
+    }
+  }

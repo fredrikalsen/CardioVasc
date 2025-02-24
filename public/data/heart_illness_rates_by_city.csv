@@ -1,0 +1,133 @@
+assessment_centre,illness,illness_rate
+Leeds,heart/cardiac problem,0.98
+Leeds,heart attack/myocardial infarction,5.16
+Leeds,heart valve problem/heart murmur,2.3
+Leeds,heart arrhythmia,1.77
+Leeds,irregular heart beat,0.0
+Leeds,heart failure/pulmonary odema,0.22
+Stockport (pilot),heart/cardiac problem,1.78
+Stockport (pilot),heart attack/myocardial infarction,8.73
+Stockport (pilot),heart valve problem/heart murmur,4.09
+Stockport (pilot),heart arrhythmia,0.72
+Stockport (pilot),irregular heart beat,0.0
+Stockport (pilot),heart failure/pulmonary odema,0.72
+Glasgow,heart/cardiac problem,0.79
+Glasgow,heart attack/myocardial infarction,6.010000000000001
+Glasgow,heart valve problem/heart murmur,2.1
+Glasgow,heart arrhythmia,1.76
+Glasgow,irregular heart beat,0.0
+Glasgow,heart failure/pulmonary odema,0.3
+Sheffield,heart/cardiac problem,0.5
+Sheffield,heart attack/myocardial infarction,4.37
+Sheffield,heart valve problem/heart murmur,0.87
+Sheffield,heart arrhythmia,0.43
+Sheffield,irregular heart beat,1.08
+Sheffield,heart failure/pulmonary odema,0.22
+Liverpool,heart/cardiac problem,0.65
+Liverpool,heart attack/myocardial infarction,4.83
+Liverpool,heart valve problem/heart murmur,1.27
+Liverpool,heart arrhythmia,1.04
+Liverpool,irregular heart beat,0.45
+Liverpool,heart failure/pulmonary odema,0.15
+Cardiff,heart/cardiac problem,1.08
+Cardiff,heart attack/myocardial infarction,4.68
+Cardiff,heart valve problem/heart murmur,2.0
+Cardiff,heart arrhythmia,1.31
+Cardiff,irregular heart beat,0.0
+Cardiff,heart failure/pulmonary odema,0.19
+Bury,heart/cardiac problem,0.71
+Bury,heart attack/myocardial infarction,5.5
+Bury,heart valve problem/heart murmur,1.9000000000000001
+Bury,heart arrhythmia,2.14
+Bury,irregular heart beat,0.0
+Bury,heart failure/pulmonary odema,0.23
+Edinburgh,heart/cardiac problem,0.46
+Edinburgh,heart attack/myocardial infarction,4.43
+Edinburgh,heart valve problem/heart murmur,1.65
+Edinburgh,heart arrhythmia,1.52
+Edinburgh,irregular heart beat,0.0
+Edinburgh,heart failure/pulmonary odema,0.39
+Bristol,heart/cardiac problem,0.9600000000000001
+Bristol,heart attack/myocardial infarction,3.59
+Bristol,heart valve problem/heart murmur,1.69
+Bristol,heart arrhythmia,1.17
+Bristol,irregular heart beat,0.37
+Bristol,heart failure/pulmonary odema,0.09000000000000001
+Reading,heart/cardiac problem,0.7
+Reading,heart attack/myocardial infarction,4.21
+Reading,heart valve problem/heart murmur,1.68
+Reading,heart arrhythmia,1.66
+Reading,irregular heart beat,0.0
+Reading,heart failure/pulmonary odema,0.06
+Birmingham,heart/cardiac problem,0.52
+Birmingham,heart attack/myocardial infarction,4.1499999999999995
+Birmingham,heart valve problem/heart murmur,0.74
+Birmingham,heart arrhythmia,0.51
+Birmingham,irregular heart beat,0.8400000000000001
+Birmingham,heart failure/pulmonary odema,0.11000000000000001
+Oxford,heart/cardiac problem,0.71
+Oxford,heart attack/myocardial infarction,3.0900000000000003
+Oxford,heart valve problem/heart murmur,2.06
+Oxford,heart arrhythmia,1.43
+Oxford,irregular heart beat,0.0
+Oxford,heart failure/pulmonary odema,0.21000000000000002
+Newcastle,heart/cardiac problem,0.89
+Newcastle,heart attack/myocardial infarction,6.33
+Newcastle,heart valve problem/heart murmur,1.7000000000000002
+Newcastle,heart arrhythmia,1.82
+Newcastle,irregular heart beat,0.0
+Newcastle,heart failure/pulmonary odema,0.11
+Barts,heart/cardiac problem,0.74
+Barts,heart attack/myocardial infarction,4.46
+Barts,heart valve problem/heart murmur,1.81
+Barts,heart arrhythmia,1.35
+Barts,irregular heart beat,0.0
+Barts,heart failure/pulmonary odema,0.16
+Hounslow,heart/cardiac problem,0.91
+Hounslow,heart attack/myocardial infarction,4.06
+Hounslow,heart valve problem/heart murmur,0.68
+Hounslow,heart arrhythmia,0.75
+Hounslow,irregular heart beat,0.98
+Hounslow,heart failure/pulmonary odema,0.13
+Stoke,heart/cardiac problem,1.39
+Stoke,heart attack/myocardial infarction,5.55
+Stoke,heart valve problem/heart murmur,1.92
+Stoke,heart arrhythmia,1.55
+Stoke,irregular heart beat,0.0
+Stoke,heart failure/pulmonary odema,0.18
+Nottingham,heart/cardiac problem,0.8400000000000001
+Nottingham,heart attack/myocardial infarction,4.67
+Nottingham,heart valve problem/heart murmur,1.58
+Nottingham,heart arrhythmia,1.1099999999999999
+Nottingham,irregular heart beat,0.09
+Nottingham,heart failure/pulmonary odema,0.27
+Croydon,heart/cardiac problem,0.84
+Croydon,heart attack/myocardial infarction,3.13
+Croydon,heart valve problem/heart murmur,0.88
+Croydon,heart arrhythmia,0.68
+Croydon,irregular heart beat,0.92
+Croydon,heart failure/pulmonary odema,0.18
+Middlesborough,heart/cardiac problem,0.43000000000000005
+Middlesborough,heart attack/myocardial infarction,5.52
+Middlesborough,heart valve problem/heart murmur,0.76
+Middlesborough,heart arrhythmia,0.44
+Middlesborough,irregular heart beat,0.76
+Middlesborough,heart failure/pulmonary odema,0.22
+Swansea,heart/cardiac problem,0.62
+Swansea,heart attack/myocardial infarction,4.33
+Swansea,heart valve problem/heart murmur,1.16
+Swansea,heart arrhythmia,0.53
+Swansea,irregular heart beat,1.1600000000000001
+Swansea,heart failure/pulmonary odema,0.08
+Manchester,heart/cardiac problem,0.7
+Manchester,heart attack/myocardial infarction,4.57
+Manchester,heart valve problem/heart murmur,2.32
+Manchester,heart arrhythmia,1.54
+Manchester,irregular heart beat,0.0
+Manchester,heart failure/pulmonary odema,0.26
+Wrexham,heart/cardiac problem,0.0
+Wrexham,heart attack/myocardial infarction,2.54
+Wrexham,heart valve problem/heart murmur,0.28
+Wrexham,heart arrhythmia,0.28
+Wrexham,irregular heart beat,0.28
+Wrexham,heart failure/pulmonary odema,0.0
