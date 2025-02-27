@@ -22,6 +22,7 @@ function UK() {
   });
   const [chartOptions1, setChartOptions1] = useState({});  // Initial empty chart options
   const [selectedYearData, setSelectedYearData] = useState([]);
+  const [discrepancyRate, setDiscrepancyRate] = useState(null); // State for selected income discrepancy ratio
 
   // Bounds for the UK map
   const ukBounds = [
@@ -68,7 +69,7 @@ function UK() {
         }
 
         // Log data to confirm it's parsed correctly
-        console.log("Parsed Data:", result.data);
+        //console.log("Parsed Data:", result.data);
 
         //Delete stroke from options (no data available for all UK)
         setIllnesses(prevIllnesses => {
@@ -84,12 +85,34 @@ function UK() {
 
         // Normalize and clean up the data
         const cleanedData = result.data.map(item => ({
-          Year: item[' "Income"']?.toString(),
+          Income: item[' "Income"']?.toString(),
           Percent: parseFloat(item[' "Percent"']?.toString().trim())
         }));
 
         setSelectedYearData(cleanedData); // Store the cleaned data in the state
         setGiniCoeff(0.3);
+
+        const discRate1 = cleanedData
+          .filter(item => item.Income.trim() === "<18000")
+          .map(item => item.Percent); // Get an array of values
+
+        const discRate2 = cleanedData
+          .filter(item => item.Income.trim() === ">100000")
+          .map(item => item.Percent); // Get an array of values
+
+        // Extract first value from arrays safely
+        const rate1 = discRate1.length > 0 ? discRate1[0] : NaN;
+        const rate2 = discRate2.length > 0 ? discRate2[0] : NaN;
+
+        // Validate and calculate discrepancy rate
+        if (!isNaN(rate1) && !isNaN(rate2) && rate2 !== 0) {
+          setDiscrepancyRate(parseFloat(rate1) / parseFloat(rate2));
+        } else {
+          setDiscrepancyRate(NaN);
+          console.error("Invalid data: Cannot calculate discrepancy rate.");
+        }
+
+
         // Update the chart data with parsed years and percentages
         setChartData1({
           labels: incomes,  // Labels on the X-axis (years)
@@ -143,7 +166,7 @@ function UK() {
         }
 
         // Log data to confirm it's parsed correctly
-        console.log("Parsed Data:", result.data);
+        //console.log("Parsed Data:", result.data);
 
         // Add stroke to selection options for income graph
         setIllnesses(prevIllnesses => {
@@ -165,18 +188,34 @@ function UK() {
           console.error("No data found for " + selectedIllness);
           return;
         }
-
         // Extract all income class values (columns 4 to 8)
         const percentages = incomes.map(item => diseaseRow[item] * 100);
 
         // Normalize and clean up the data
         const cleanedData = result.data.map(item => ({
-          Year: incomes?.toString(),
-          Percent: parseFloat(percentages?.toString().trim())
+          city: item["cities"]?.toString().trim(), // Store city names
+          condition: item["conditions"]?.toString().trim(), // Store medical condition
+          gini: parseFloat(item["Gini"]), // Store Gini coefficient
+          "<18000": parseFloat(item["<18000"]), // Convert prevalence rates to numbers
+          "18-31000": parseFloat(item["18-31000"]),
+          "31-52000": parseFloat(item["31-52000"]),
+          "52-100000": parseFloat(item["52-100000"]),
+          ">100000": parseFloat(item[">100000"])
         }));
 
         setSelectedYearData(cleanedData); // Store the cleaned data in the state
         setGiniCoeff(diseaseRow["Gini"]); // Store Gini coefficient in the state
+        const discRate1 = parseFloat(diseaseRow['<18000']);
+        const discRate2 = parseFloat(diseaseRow['>100000']);
+
+        // Validate and calculate discrepancy rate
+        if (!isNaN(discRate1) && !isNaN(discRate2) && discRate2 !== 0) {
+          setDiscrepancyRate(parseFloat(discRate1) / parseFloat(discRate2));
+        } else {
+          setDiscrepancyRate(NaN);
+          console.error("Invalid data: Cannot calculate discrepancy rate.");
+        }
+
         // Update the chart data with parsed years and percentages
         setChartData1({
           labels: incomes,  // Labels on the X-axis (years)
@@ -209,7 +248,7 @@ function UK() {
                   return "Income " + tooltipItems[0].label + ": ";
                 },
                 label: (tooltipItem) => {
-                  return tooltipItem.raw + "%";
+                  return parseFloat(tooltipItem.raw).toFixed(1) + "%"; // Truncate percent to 1 decimal place
                 }
               }
             }
@@ -353,30 +392,53 @@ function UK() {
                   </div>
                 </div>
               )}
-
+            {/* Income Discrepancy Blurb */}
+            {((selectedCentre === 'all' && selectedIllness === "angina") ||
+              (selectedCentre !== 'all' &&
+                (selectedIllness === "angina" ||
+                  selectedIllness === "stroke" ||
+                  selectedIllness === "hypertension" ||
+                  selectedIllness === "heart attack/myocardial infarction"))) && (<div className="stats-card">
+                    <div className="rate-display">
+                      {discrepancyRate !== null && selectedIllness ? (
+                        <>
+                          <p>{selectedCentre === 'all'
+                            ? `In the United Kingdom, people of the lowest income class are `
+                            : `In ${selectedCentre}, people of the lowest income class are `}<span className="rate-value">{discrepancyRate.toFixed(1)}</span> times more likely to be diagnosed with {selectedIllness} than the highest income class.</p>
+                        </>
+                      ) : (
+                        <span className="rate-na">Data not available</span>
+                      )}
+                    </div>
+                  </div>)}
             {/* Gini Coefficient */}
-            {selectedIllness && (
-              <div className="stats-card">
-                <h3>
-                  {selectedCentre === 'all'
-                    ? `United Kingdom Nationwide`
-                    : `Gini Coefficient in ${selectedCentre}`}
-                </h3>
-                <div className="rate-display">
-                  {GiniCoeff !== null ? (
-                    <>
-                      <span className="rate-unit">Gini Coefficient: </span>
-                      <span className="rate-value">{GiniCoeff.toFixed(1)}</span>
+            {((selectedCentre === 'all' && selectedIllness === "angina") ||
+              (selectedCentre !== 'all' &&
+                (selectedIllness === "angina" ||
+                  selectedIllness === "stroke" ||
+                  selectedIllness === "hypertension" ||
+                  selectedIllness === "heart attack/myocardial infarction"))) && (
+                <div className="stats-card">
+                  <h3>
+                    {selectedCentre === 'all'
+                      ? `United Kingdom Nationwide`
+                      : `Gini Coefficient in ${selectedCentre}`}
+                  </h3>
+                  <div className="rate-display">
+                    {GiniCoeff !== null ? (
+                      <>
+                        <span className="rate-unit">Gini Coefficient: </span>
+                        <span className="rate-value">{GiniCoeff.toFixed(1)}</span>
 
-                    </>
-                  ) : selectedCentre === 'all' ? (
-                    <span className="rate-na">Select a centre to view specific data</span>
-                  ) : (
-                    <span className="rate-na">Data not available</span>
-                  )}
+                      </>
+                    ) : selectedCentre === 'all' ? (
+                      <span className="rate-na">Select a centre to view specific data</span>
+                    ) : (
+                      <span className="rate-na">Data not available</span>
+                    )}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
           </div>
         </div>
 
