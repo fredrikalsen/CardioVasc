@@ -6,31 +6,26 @@ import { scaleLinear } from 'd3-scale';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import '../styles/UK.css';
-// Importing the Bar component from the react-chartjs-2 library to display bar charts
 import { Bar } from 'react-chartjs-2';
 
 function UK() {
-  const [data, setData] = useState([]); // State for storing parsed data
-  const [centres, setCentres] = useState([]); // State for storing unique assessment centres
-  const [illnesses, setIllnesses] = useState([]); // State for storing unique illnesses
-  const [selectedCentre, setSelectedCentre] = useState('all'); // State for selected centre
-  const [selectedIllness, setSelectedIllness] = useState(''); // State for selected illness
-  const [illnessRate, setIllnessRate] = useState(null); // State for the calculated illness rate
+  const [data, setData] = useState([]);
+  const [centres, setCentres] = useState([]);
+  const [illnesses, setIllnesses] = useState([]);
+  const [selectedCentre, setSelectedCentre] = useState('all');
+  const [selectedIllness, setSelectedIllness] = useState('');
+  const [illnessRate, setIllnessRate] = useState(null);
   const [GiniCoeff, setGiniCoeff] = useState(null);
-  const [chartData1, setChartData1] = useState({
-    datasets: []  // Initial empty datasets for the chart
-  });
-  const [chartOptions1, setChartOptions1] = useState({});  // Initial empty chart options
+  const [chartData1, setChartData1] = useState({ datasets: [] });
+  const [chartOptions1, setChartOptions1] = useState({});
   const [selectedYearData, setSelectedYearData] = useState([]);
-  const [discrepancyRate, setDiscrepancyRate] = useState(null); // State for selected income discrepancy ratio
+  const [discrepancyRate, setDiscrepancyRate] = useState(null);
 
-  // Bounds for the UK map
   const ukBounds = [
     [49.8, -8.0],
     [60.9, 2.0],
   ];
 
-  // Fetch and parse the CSV data on component mount
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch('./data/heart_disease_rates.csv');
@@ -40,13 +35,15 @@ function UK() {
         complete: (result) => {
           const parsedData = result.data.map((item) => ({
             ...item,
-            latitude: parseFloat(item.latitude), // Parse latitude as a float
-            longitude: parseFloat(item.longitude), // Parse longitude as a float
-            illness_rate: parseFloat(item.illness_rate), // Parse illness rate as a float
+            latitude: parseFloat(item.latitude),
+            longitude: parseFloat(item.longitude),
+            illness_rate: parseFloat(item.illness_rate),
           }));
-          setData(parsedData); // Store parsed data in state
-          setCentres(['all', ...new Set(parsedData.map((item) => item.assessment_centre))]); // Extract unique centres
-          setIllnesses([...new Set(parsedData.map((item) => item.illness))]); // Extract unique illnesses
+          setData(parsedData);
+          // Get unique centres while preserving order
+          const uniqueCentres = [...new Set(parsedData.map(item => item.assessment_centre))];
+          setCentres(['all', ...uniqueCentres]);
+          setIllnesses([...new Set(parsedData.map((item) => item.illness))]);
         },
       });
     };
@@ -272,6 +269,12 @@ function UK() {
     updateIllnessRate(selectedCentre, illness);
   };
 
+  const handleMarkerClick = (centreName) => {
+    setSelectedCentre(centreName);
+    // If an illness is already selected, keep it
+    if (selectedIllness) updateIllnessRate(centreName, selectedIllness);
+  };
+
   // Update the calculated illness rate based on selected centre and illness
   const updateIllnessRate = (centre, illness) => {
     if (centre === 'all' && illness) {
@@ -461,49 +464,50 @@ function UK() {
 
             {/* Map markers */}
             {data
-              .filter(
-                (centre) =>
-                  (selectedCentre === 'all' || centre.assessment_centre === selectedCentre) &&
-                  !isNaN(centre.latitude) &&
-                  !isNaN(centre.longitude) &&
-                  (selectedIllness === '' || centre.illness === selectedIllness)
-              )
-              .map((centre, index) => {
-                const isSelected = centre.assessment_centre === selectedCentre;
-                const illnessRate = selectedIllness ? parseFloat(centre.illness_rate) : null;
+    .filter(
+      (centre) =>
+        !isNaN(centre.latitude) &&
+        !isNaN(centre.longitude) &&
+        (selectedIllness === '' || centre.illness === selectedIllness)
+    )
+    .map((centre, index) => {
+      const isSelected = centre.assessment_centre === selectedCentre;
+      const illnessRate = selectedIllness ? parseFloat(centre.illness_rate) : null;
 
-                return (
-                  <CircleMarker
-                    key={`${centre.assessment_centre}-${centre.illness}-${index}`}
-                    center={[centre.latitude, centre.longitude]}
-                    radius={isSelected ? 12 : 8}
-                    fillColor={
-                      selectedIllness
-                        ? colorScale(illnessRate || 0)
-                        : isSelected
-                          ? '#ff4444'
-                          : '#4a90e2'
-                    }
-                    color="#333"
-                    weight={isSelected ? 2 : 1}
-                    opacity={0.8}
-                    fillOpacity={0.9}
-                  >
-                    {/* Popup for marker */}
-                    <Popup className="map-popup">
-                      <h4>{centre.assessment_centre}</h4>
-                      {selectedIllness && (
-                        <div className="popup-content">
-                          <div className="popup-rate">
-                            {illnessRate?.toFixed(1) || 'N/A'}%
-                          </div>
-                          <p>of adults report {selectedIllness.toLowerCase()}</p>
-                        </div>
-                      )}
-                    </Popup>
-                  </CircleMarker>
-                );
-              })}
+      return (
+        <CircleMarker
+          key={`${centre.assessment_centre}-${centre.illness}-${index}`}
+          center={[centre.latitude, centre.longitude]}
+          radius={isSelected ? 12 : 8}
+          fillColor={
+            selectedIllness
+              ? colorScale(illnessRate || 0)
+              : isSelected
+                ? '#ff4444'
+                : '#4a90e2'
+          }
+          color="#333"
+          weight={isSelected ? 2 : 1}
+          opacity={0.8}
+          fillOpacity={0.9}
+          eventHandlers={{
+            click: () => handleMarkerClick(centre.assessment_centre)
+          }}
+        >
+          <Popup className="map-popup">
+            <h4>{centre.assessment_centre}</h4>
+            {selectedIllness && (
+              <div className="popup-content">
+                <div className="popup-rate">
+                  {illnessRate?.toFixed(1) || 'N/A'}%
+                </div>
+                <p>of adults report {selectedIllness.toLowerCase()}</p>
+              </div>
+            )}
+          </Popup>
+        </CircleMarker>
+      );
+    })}
           </MapContainer>
         </div>
       </div>
