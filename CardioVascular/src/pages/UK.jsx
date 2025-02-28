@@ -76,6 +76,7 @@ function UK() {
 
         // Extract income data from the CSV and filter out empty values
         const incomes = result.data.map(item => item[' "Income"']).filter(Boolean);
+        const incomesLabels = incomes.map(item => item + "£ Per Year");
 
         // Extract percentage data from the CSV and filter out empty values
         const percentages = result.data.map(item => item[' "Percent"']).filter(Boolean);
@@ -112,7 +113,7 @@ function UK() {
 
         // Update the chart data with parsed years and percentages
         setChartData1({
-          labels: incomes,  // Labels on the X-axis (years)
+          labels: incomesLabels,  // Labels on the X-axis (years)
           datasets: [
             {
               label: "United Kingdom",  // Label of the dataset (country name)
@@ -176,7 +177,8 @@ function UK() {
         });
 
         // Extract income data from the CSV and filter out empty values
-        const incomes = Object.keys(result.data[0]).slice(4);
+        const incomes = Object.keys(result.data[0]).slice(4)
+        const incomesLabels = incomes.map(item => item + "£ Per Year");
 
         // Extract percentage data from the CSV and filter out empty values
         const diseaseRow = result.data.find(row => row.cities === selectedCentre && row.conditions === selectedIllness);
@@ -215,7 +217,7 @@ function UK() {
 
         // Update the chart data with parsed years and percentages
         setChartData1({
-          labels: incomes,  // Labels on the X-axis (years)
+          labels: incomesLabels,  // Labels on the X-axis (years)
           datasets: [
             {
               label: "United Kingdom",  // Label of the dataset (country name)
@@ -464,50 +466,50 @@ function UK() {
 
             {/* Map markers */}
             {data
-    .filter(
-      (centre) =>
-        !isNaN(centre.latitude) &&
-        !isNaN(centre.longitude) &&
-        (selectedIllness === '' || centre.illness === selectedIllness)
-    )
-    .map((centre, index) => {
-      const isSelected = centre.assessment_centre === selectedCentre;
-      const illnessRate = selectedIllness ? parseFloat(centre.illness_rate) : null;
+              .filter(
+                (centre) =>
+                  !isNaN(centre.latitude) &&
+                  !isNaN(centre.longitude) &&
+                  (selectedIllness === '' || centre.illness === selectedIllness)
+              )
+              .map((centre, index) => {
+                const isSelected = centre.assessment_centre === selectedCentre;
+                const illnessRate = selectedIllness ? parseFloat(centre.illness_rate) : null;
 
-      return (
-        <CircleMarker
-          key={`${centre.assessment_centre}-${centre.illness}-${index}`}
-          center={[centre.latitude, centre.longitude]}
-          radius={isSelected ? 12 : 8}
-          fillColor={
-            selectedIllness
-              ? colorScale(illnessRate || 0)
-              : isSelected
-                ? '#ff4444'
-                : '#4a90e2'
-          }
-          color="#333"
-          weight={isSelected ? 2 : 1}
-          opacity={0.8}
-          fillOpacity={0.9}
-          eventHandlers={{
-            click: () => handleMarkerClick(centre.assessment_centre)
-          }}
-        >
-          <Popup className="map-popup">
-            <h4>{centre.assessment_centre}</h4>
-            {selectedIllness && (
-              <div className="popup-content">
-                <div className="popup-rate">
-                  {illnessRate?.toFixed(1) || 'N/A'}%
-                </div>
-                <p>of adults report {selectedIllness.toLowerCase()}</p>
-              </div>
-            )}
-          </Popup>
-        </CircleMarker>
-      );
-    })}
+                return (
+                  <CircleMarker
+                    key={`${centre.assessment_centre}-${centre.illness}-${index}`}
+                    center={[centre.latitude, centre.longitude]}
+                    radius={isSelected ? 12 : 8}
+                    fillColor={
+                      selectedIllness
+                        ? colorScale(illnessRate || 0)
+                        : isSelected
+                          ? '#ff4444'
+                          : '#4a90e2'
+                    }
+                    color="#333"
+                    weight={isSelected ? 2 : 1}
+                    opacity={0.8}
+                    fillOpacity={0.9}
+                    eventHandlers={{
+                      click: () => handleMarkerClick(centre.assessment_centre)
+                    }}
+                  >
+                    <Popup className="map-popup">
+                      <h4>{centre.assessment_centre}</h4>
+                      {selectedIllness && (
+                        <div className="popup-content">
+                          <div className="popup-rate">
+                            {illnessRate?.toFixed(1) || 'N/A'}%
+                          </div>
+                          <p>of adults report {selectedIllness.toLowerCase()}</p>
+                        </div>
+                      )}
+                    </Popup>
+                  </CircleMarker>
+                );
+              })}
           </MapContainer>
         </div>
       </div>
