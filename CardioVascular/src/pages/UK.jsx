@@ -76,7 +76,6 @@ function UK() {
 
         // Extract income data from the CSV and filter out empty values
         const incomes = result.data.map(item => item[' "Income"']).filter(Boolean);
-        const incomesLabels = incomes.map(item => item + "£ Per Year");
 
         // Extract percentage data from the CSV and filter out empty values
         const percentages = result.data.map(item => item[' "Percent"']).filter(Boolean);
@@ -113,7 +112,7 @@ function UK() {
 
         // Update the chart data with parsed years and percentages
         setChartData1({
-          labels: incomesLabels,  // Labels on the X-axis (years)
+          labels: incomes,  // Labels on the X-axis (years)
           datasets: [
             {
               label: "United Kingdom",  // Label of the dataset (country name)
@@ -147,6 +146,20 @@ function UK() {
                 }
               }
             }
+          },
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: "Income Bracket (£ Per Year)"  // Label for X-axis
+              }
+            },
+            y: {
+              title: {
+                display: true,
+                text: "Prevalence of " + selectedIllness + "(%)"  // Label for Y-axis
+              }
+            }
           }
         });
       }
@@ -178,7 +191,6 @@ function UK() {
 
         // Extract income data from the CSV and filter out empty values
         const incomes = Object.keys(result.data[0]).slice(4)
-        const incomesLabels = incomes.map(item => item + "£ Per Year");
 
         // Extract percentage data from the CSV and filter out empty values
         const diseaseRow = result.data.find(row => row.cities === selectedCentre && row.conditions === selectedIllness);
@@ -217,7 +229,7 @@ function UK() {
 
         // Update the chart data with parsed years and percentages
         setChartData1({
-          labels: incomesLabels,  // Labels on the X-axis (years)
+          labels: incomes,  // Labels on the X-axis (years)
           datasets: [
             {
               label: "United Kingdom",  // Label of the dataset (country name)
@@ -249,6 +261,20 @@ function UK() {
                 label: (tooltipItem) => {
                   return parseFloat(tooltipItem.raw).toFixed(1) + "%"; // Truncate percent to 1 decimal place
                 }
+              }
+            }
+          },
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: "Income Bracket (£ Per Year)"  // Label for X-axis
+              }
+            },
+            y: {
+              title: {
+                display: true,
+                text: "Prevalence of " + selectedIllness + " (%)"  // Label for Y-axis
               }
             }
           }
