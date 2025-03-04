@@ -11,15 +11,30 @@ function Header() {
     const getPageTitle = () => {
         switch(location.pathname) {
             case '/':
-                return 'Prevalence Rate of Cardiovascular Diseases Global';
+                return (
+                    <>
+                        <span className="title-main">Prevalence Rate of Cardiovascular Diseases Global</span>
+                        <span className="title-highlight"></span>
+                    </>
+                );
             case '/uk':
-                return 'Prevalence Rate of Cardiovascular Diseases in the UK';
+                return (
+                    <>
+                        <span className="title-main">Prevalence Rate of Cardiovascular Diseases in the UK</span>
+                        <span className="title-highlight"></span>
+                    </>
+                );
             case '/usa':
-                return 'Prevalence Rate of Cardiovascular Diseases in the USA';
+                return (
+                    <>
+                        <span className="title-main">Prevalence Rate of Cardiovascular Diseases in the USA</span>
+                        <span className="title-highlight"></span>
+                    </>
+                );
             case '/about':
-                return 'About';
+                return <span className="title-single">About</span>;
             default:
-                return 'CardioVascularView';
+                return <span className="title-single">CardioVascularView</span>;
         }
     };
 

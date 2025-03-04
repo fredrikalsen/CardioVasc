@@ -6,30 +6,27 @@ import { scaleLinear } from 'd3-scale';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import '../styles/UK.css';
-// Importing the Bar component from the react-chartjs-2 library to display bar charts
 import { Bar } from 'react-chartjs-2';
 
 function UK() {
-  const [data, setData] = useState([]); // State for storing parsed data
-  const [centres, setCentres] = useState([]); // State for storing unique assessment centres
-  const [illnesses, setIllnesses] = useState([]); // State for storing unique illnesses
-  const [selectedCentre, setSelectedCentre] = useState('all'); // State for selected centre
-  const [selectedIllness, setSelectedIllness] = useState(''); // State for selected illness
-  const [illnessRate, setIllnessRate] = useState(null); // State for the calculated illness rate
+  const [data, setData] = useState([]);
+  const [centres, setCentres] = useState([]);
+  const [illnesses, setIllnesses] = useState([]);
+  const [selectedCentre, setSelectedCentre] = useState('all');
+  const [selectedIllness, setSelectedIllness] = useState('');
+  const [illnessRate, setIllnessRate] = useState(null);
   const [GiniCoeff, setGiniCoeff] = useState(null);
-  const [chartData1, setChartData1] = useState({
-    datasets: []  // Initial empty datasets for the chart
-  });
-  const [chartOptions1, setChartOptions1] = useState({});  // Initial empty chart options
+  const [chartData1, setChartData1] = useState({ datasets: [] });
+  const [chartOptions1, setChartOptions1] = useState({});
   const [selectedYearData, setSelectedYearData] = useState([]);
+  const [discrepancyRate, setDiscrepancyRate] = useState(null);
+  const [selectedMarker, setSelectedMarker] = useState(null);
 
-  // Bounds for the UK map
   const ukBounds = [
     [49.8, -8.0],
     [60.9, 2.0],
   ];
 
-  // Fetch and parse the CSV data on component mount
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch('./data/heart_disease_rates.csv');
@@ -39,18 +36,27 @@ function UK() {
         complete: (result) => {
           const parsedData = result.data.map((item) => ({
             ...item,
-            latitude: parseFloat(item.latitude), // Parse latitude as a float
-            longitude: parseFloat(item.longitude), // Parse longitude as a float
-            illness_rate: parseFloat(item.illness_rate), // Parse illness rate as a float
+            latitude: parseFloat(item.latitude),
+            longitude: parseFloat(item.longitude),
+            illness_rate: parseFloat(item.illness_rate),
           }));
-          setData(parsedData); // Store parsed data in state
-          setCentres(['all', ...new Set(parsedData.map((item) => item.assessment_centre))]); // Extract unique centres
-          setIllnesses([...new Set(parsedData.map((item) => item.illness))]); // Extract unique illnesses
+          setData(parsedData);
+          // Get unique centres while preserving order
+          const uniqueCentres = [...new Set(parsedData.map(item => item.assessment_centre))];
+          setCentres(['all', ...uniqueCentres]);
+          setIllnesses([...new Set(parsedData.map((item) => item.illness))]);
         },
       });
     };
     fetchData();
   }, []);
+
+
+    useEffect(() => {
+    // This effect will run whenever selectedCentre changes
+    // You can add any additional logic here if needed
+  }, [selectedCentre]);
+
 
   // Retrieve income data
   const csvFile = selectedCentre === "all" ? require('../income_CSV/all.csv') : require('../income_CSV/giniandprev.csv');
@@ -68,7 +74,7 @@ function UK() {
         }
 
         // Log data to confirm it's parsed correctly
-        console.log("Parsed Data:", result.data);
+        //console.log("Parsed Data:", result.data);
 
         //Delete stroke from options (no data available for all UK)
         setIllnesses(prevIllnesses => {
@@ -84,12 +90,34 @@ function UK() {
 
         // Normalize and clean up the data
         const cleanedData = result.data.map(item => ({
-          Year: item[' "Income"']?.toString(),
+          Income: item[' "Income"']?.toString(),
           Percent: parseFloat(item[' "Percent"']?.toString().trim())
         }));
 
         setSelectedYearData(cleanedData); // Store the cleaned data in the state
         setGiniCoeff(0.3);
+
+        const discRate1 = cleanedData
+          .filter(item => item.Income.trim() === "<18000")
+          .map(item => item.Percent); // Get an array of values
+
+        const discRate2 = cleanedData
+          .filter(item => item.Income.trim() === ">100000")
+          .map(item => item.Percent); // Get an array of values
+
+        // Extract first value from arrays safely
+        const rate1 = discRate1.length > 0 ? discRate1[0] : NaN;
+        const rate2 = discRate2.length > 0 ? discRate2[0] : NaN;
+
+        // Validate and calculate discrepancy rate
+        if (!isNaN(rate1) && !isNaN(rate2) && rate2 !== 0) {
+          setDiscrepancyRate(parseFloat(rate1) / parseFloat(rate2));
+        } else {
+          setDiscrepancyRate(NaN);
+          console.error("Invalid data: Cannot calculate discrepancy rate.");
+        }
+
+
         // Update the chart data with parsed years and percentages
         setChartData1({
           labels: incomes,  // Labels on the X-axis (years)
@@ -126,6 +154,20 @@ function UK() {
                 }
               }
             }
+          },
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: "Income Bracket (£ Per Year)"  // Label for X-axis
+              }
+            },
+            y: {
+              title: {
+                display: true,
+                text: "Prevalence of " + selectedIllness + "(%)"  // Label for Y-axis
+              }
+            }
           }
         });
       }
@@ -143,7 +185,7 @@ function UK() {
         }
 
         // Log data to confirm it's parsed correctly
-        console.log("Parsed Data:", result.data);
+        //console.log("Parsed Data:", result.data);
 
         // Add stroke to selection options for income graph
         setIllnesses(prevIllnesses => {
@@ -156,7 +198,7 @@ function UK() {
         });
 
         // Extract income data from the CSV and filter out empty values
-        const incomes = Object.keys(result.data[0]).slice(4);
+        const incomes = Object.keys(result.data[0]).slice(4)
 
         // Extract percentage data from the CSV and filter out empty values
         const diseaseRow = result.data.find(row => row.cities === selectedCentre && row.conditions === selectedIllness);
@@ -165,18 +207,34 @@ function UK() {
           console.error("No data found for " + selectedIllness);
           return;
         }
-
         // Extract all income class values (columns 4 to 8)
         const percentages = incomes.map(item => diseaseRow[item] * 100);
 
         // Normalize and clean up the data
         const cleanedData = result.data.map(item => ({
-          Year: incomes?.toString(),
-          Percent: parseFloat(percentages?.toString().trim())
+          city: item["cities"]?.toString().trim(), // Store city names
+          condition: item["conditions"]?.toString().trim(), // Store medical condition
+          gini: parseFloat(item["Gini"]), // Store Gini coefficient
+          "<18000": parseFloat(item["<18000"]), // Convert prevalence rates to numbers
+          "18-31000": parseFloat(item["18-31000"]),
+          "31-52000": parseFloat(item["31-52000"]),
+          "52-100000": parseFloat(item["52-100000"]),
+          ">100000": parseFloat(item[">100000"])
         }));
 
         setSelectedYearData(cleanedData); // Store the cleaned data in the state
         setGiniCoeff(diseaseRow["Gini"]); // Store Gini coefficient in the state
+        const discRate1 = parseFloat(diseaseRow['<18000']);
+        const discRate2 = parseFloat(diseaseRow['>100000']);
+
+        // Validate and calculate discrepancy rate
+        if (!isNaN(discRate1) && !isNaN(discRate2) && discRate2 !== 0) {
+          setDiscrepancyRate(parseFloat(discRate1) / parseFloat(discRate2));
+        } else {
+          setDiscrepancyRate(NaN);
+          console.error("Invalid data: Cannot calculate discrepancy rate.");
+        }
+
         // Update the chart data with parsed years and percentages
         setChartData1({
           labels: incomes,  // Labels on the X-axis (years)
@@ -209,8 +267,22 @@ function UK() {
                   return "Income " + tooltipItems[0].label + ": ";
                 },
                 label: (tooltipItem) => {
-                  return tooltipItem.raw + "%";
+                  return parseFloat(tooltipItem.raw).toFixed(1) + "%"; // Truncate percent to 1 decimal place
                 }
+              }
+            }
+          },
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: "Income Bracket (£ Per Year)"  // Label for X-axis
+              }
+            },
+            y: {
+              title: {
+                display: true,
+                text: "Prevalence of " + selectedIllness + " (%)"  // Label for Y-axis
               }
             }
           }
@@ -231,6 +303,12 @@ function UK() {
     const illness = event.target.value;
     setSelectedIllness(illness);
     updateIllnessRate(selectedCentre, illness);
+  };
+
+  const handleMarkerClick = (centreName) => {
+    setSelectedCentre(centreName);
+    setSelectedMarker(centreName);  // This is the key change
+    if (selectedIllness) updateIllnessRate(centreName, selectedIllness);
   };
 
   // Update the calculated illness rate based on selected centre and illness
@@ -353,30 +431,53 @@ function UK() {
                   </div>
                 </div>
               )}
-
+            {/* Income Discrepancy Blurb */}
+            {((selectedCentre === 'all' && selectedIllness === "angina") ||
+              (selectedCentre !== 'all' &&
+                (selectedIllness === "angina" ||
+                  selectedIllness === "stroke" ||
+                  selectedIllness === "hypertension" ||
+                  selectedIllness === "heart attack/myocardial infarction"))) && (<div className="stats-card">
+                    <div className="rate-display">
+                      {discrepancyRate !== null && selectedIllness ? (
+                        <>
+                          <p>{selectedCentre === 'all'
+                            ? `In the United Kingdom, people of the lowest income class are `
+                            : `In ${selectedCentre}, people of the lowest income class are `}<span className="rate-value">{discrepancyRate.toFixed(1)}</span> times more likely to be diagnosed with {selectedIllness} than the highest income class.</p>
+                        </>
+                      ) : (
+                        <span className="rate-na">Data not available</span>
+                      )}
+                    </div>
+                  </div>)}
             {/* Gini Coefficient */}
-            {selectedIllness && (
-              <div className="stats-card">
-                <h3>
-                  {selectedCentre === 'all'
-                    ? `United Kingdom Nationwide`
-                    : `Gini Coefficient in ${selectedCentre}`}
-                </h3>
-                <div className="rate-display">
-                  {GiniCoeff !== null ? (
-                    <>
-                      <span className="rate-unit">Gini Coefficient: </span>
-                      <span className="rate-value">{GiniCoeff.toFixed(1)}</span>
+            {((selectedCentre === 'all' && selectedIllness === "angina") ||
+              (selectedCentre !== 'all' &&
+                (selectedIllness === "angina" ||
+                  selectedIllness === "stroke" ||
+                  selectedIllness === "hypertension" ||
+                  selectedIllness === "heart attack/myocardial infarction"))) && (
+                <div className="stats-card">
+                  <h3>
+                    {selectedCentre === 'all'
+                      ? `United Kingdom Nationwide`
+                      : `Gini Coefficient in ${selectedCentre}`}
+                  </h3>
+                  <div className="rate-display">
+                    {GiniCoeff !== null ? (
+                      <>
+                        <span className="rate-unit">Gini Coefficient: </span>
+                        <span className="rate-value">{GiniCoeff.toFixed(1)}</span>
 
-                    </>
-                  ) : selectedCentre === 'all' ? (
-                    <span className="rate-na">Select a centre to view specific data</span>
-                  ) : (
-                    <span className="rate-na">Data not available</span>
-                  )}
+                      </>
+                    ) : selectedCentre === 'all' ? (
+                      <span className="rate-na">Select a centre to view specific data</span>
+                    ) : (
+                      <span className="rate-na">Data not available</span>
+                    )}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
           </div>
         </div>
 
@@ -399,49 +500,66 @@ function UK() {
 
             {/* Map markers */}
             {data
-              .filter(
-                (centre) =>
-                  (selectedCentre === 'all' || centre.assessment_centre === selectedCentre) &&
-                  !isNaN(centre.latitude) &&
-                  !isNaN(centre.longitude) &&
-                  (selectedIllness === '' || centre.illness === selectedIllness)
-              )
-              .map((centre, index) => {
-                const isSelected = centre.assessment_centre === selectedCentre;
-                const illnessRate = selectedIllness ? parseFloat(centre.illness_rate) : null;
+  .filter(
+    (centre) =>
+      !isNaN(centre.latitude) &&
+      !isNaN(centre.longitude) &&
+      (selectedIllness === '' || centre.illness === selectedIllness)
+  )
+  .map((centre, index) => {
+    const isSelected = centre.assessment_centre === selectedMarker;
+    const illnessRate = selectedIllness ? parseFloat(centre.illness_rate) : null;
 
-                return (
-                  <CircleMarker
-                    key={`${centre.assessment_centre}-${centre.illness}-${index}`}
-                    center={[centre.latitude, centre.longitude]}
-                    radius={isSelected ? 12 : 8}
-                    fillColor={
-                      selectedIllness
-                        ? colorScale(illnessRate || 0)
-                        : isSelected
-                          ? '#ff4444'
-                          : '#4a90e2'
-                    }
-                    color="#333"
-                    weight={isSelected ? 2 : 1}
-                    opacity={0.8}
-                    fillOpacity={0.9}
-                  >
-                    {/* Popup for marker */}
-                    <Popup className="map-popup">
-                      <h4>{centre.assessment_centre}</h4>
-                      {selectedIllness && (
-                        <div className="popup-content">
-                          <div className="popup-rate">
-                            {illnessRate?.toFixed(1) || 'N/A'}%
-                          </div>
-                          <p>of adults report {selectedIllness.toLowerCase()}</p>
-                        </div>
-                      )}
-                    </Popup>
-                  </CircleMarker>
-                );
-              })}
+    return (
+      <CircleMarker
+        key={`${centre.assessment_centre}-${centre.illness}-${index}`}
+        center={[centre.latitude, centre.longitude]}
+        radius={isSelected ? 12 : 8}
+        pathOptions={{
+          fillColor: isSelected ? 'var(--green)' : 'var(--lightgray)',
+          color: isSelected ? '#333' : '#eee',
+          weight: isSelected ? 2 : 1,
+          opacity: 0.3,
+          fillOpacity: 0.9
+        }}
+        eventHandlers={{
+          click: () => handleMarkerClick(centre.assessment_centre),
+          mouseover: (e) => {
+            const layer = e.target;
+            if (!isSelected) {
+              layer.setStyle({
+                fillColor: 'var(--green)',
+                color: '#333',
+                weight: 1
+              });
+            }
+          },
+          mouseout: (e) => {
+            const layer = e.target;
+            if (!isSelected) {
+              layer.setStyle({
+                fillColor: 'var(--lightgray)',
+                color: '#eee',
+                weight: 1
+              });
+            }
+          }
+        }}
+      >
+        <Popup className="map-popup">
+          <h4>{centre.assessment_centre}</h4>
+          {selectedIllness && (
+            <div className="popup-content">
+              <div className="popup-rate">
+                {illnessRate?.toFixed(1) || 'N/A'}%
+              </div>
+              <p>of adults report {selectedIllness.toLowerCase()}</p>
+            </div>
+          )}
+        </Popup>
+      </CircleMarker>
+    );
+  })}
           </MapContainer>
         </div>
       </div>

@@ -5,6 +5,7 @@ import React from 'react';
 
 import { NavLink } from 'react-router-dom';
 
+
 import '../styles/Navigation.css';
 
 // Importing hooks from React for side effects and component state management
@@ -658,9 +659,23 @@ function Index() {
                 </div>
 
                 <div className="title-container">
-                    <h2 className="main-title">
-                        Prevalence Rate of Cardiovascular Diseases Global
-                    </h2>
+                <h2
+  className="main-title"
+  style={{
+    color: '#373A40',
+    margin: 0,
+    fontSize: '1.4rem',
+    fontWeight: 400,
+    display: 'flex',
+    gap: '8px',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    textAlign: 'center'
+  }}
+>
+  Prevalence Rate of Cardiovascular Diseases Global
+</h2>
                 </div>
 
                 <div className="menu-container">
