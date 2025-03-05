@@ -570,6 +570,11 @@ svg {
         left: 5px;
         bottom: 3px;
     }
-
+    
+    @media (max-width: 768px) {
+        header {
+            background-image: none; /* Remove the favicon image on mobile */
+        }
+    }
 
 }
