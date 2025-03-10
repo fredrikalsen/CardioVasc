@@ -157,7 +157,7 @@ function UK() {
             y: {
               title: {
                 display: true,
-                text: "Prevalence of " + selectedIllness + "(%)"  // Label for Y-axis
+                text: "Prevalence of Disease (%)"  // Label for Y-axis
               }
             }
           }
@@ -274,7 +274,7 @@ function UK() {
             y: {
               title: {
                 display: true,
-                text: "Prevalence of " + selectedIllness + " (%)"  // Label for Y-axis
+                text: "Prevalence of Disease (%)"  // Label for Y-axis
               }
             }
           }
