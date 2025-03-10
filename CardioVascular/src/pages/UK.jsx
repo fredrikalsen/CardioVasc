@@ -21,6 +21,7 @@ function UK() {
   const [selectedYearData, setSelectedYearData] = useState([]);
   const [discrepancyRate, setDiscrepancyRate] = useState(null);
   const [selectedMarker, setSelectedMarker] = useState(null);
+  const selectedIllnessCapitalized = selectedIllness.charAt(0).toUpperCase() + selectedIllness.slice(1);
 
   const ukBounds = [
     [49.8, -8.0],
@@ -52,7 +53,7 @@ function UK() {
   }, []);
 
 
-    useEffect(() => {
+  useEffect(() => {
     // This effect will run whenever selectedCentre changes
     // You can add any additional logic here if needed
   }, [selectedCentre]);
@@ -204,7 +205,7 @@ function UK() {
         const diseaseRow = result.data.find(row => row.cities === selectedCentre && row.conditions === selectedIllness);
 
         if (!diseaseRow) {
-          console.error("No data found for " + selectedIllness);
+          console.error("No data found for " + selectedIllnessCapitalized);
           return;
         }
         // Extract all income class values (columns 4 to 8)
@@ -259,7 +260,7 @@ function UK() {
             },
             title: {
               display: true,  // Display the chart title
-              text: "Prevalence of " + selectedIllness + " (%) by Income"  // Title text
+              text: "Prevalence of " + selectedIllnessCapitalized + " (%) by Income"  // Title text
             },
             tooltip: {
               callbacks: {
@@ -381,12 +382,15 @@ function UK() {
                   value={selectedIllness}
                   onChange={handleIllnessChange}
                 >
-                  <option value="">Select Condition</option>
-                  {illnesses.map((illness, index) => (
-                    <option key={`${illness}-${index}`} value={illness}>
-                      {illness}
-                    </option>
-                  ))}
+                  {illnesses.filter(illness => typeof illness === "string" && illness.length > 0)
+                    .map((illness, index) => {
+                      const capitalizedIllness = illness.charAt(0).toUpperCase() + illness.slice(1);
+                      return (
+                        <option key={`${illness}-${index}`} value={illness}>
+                          {capitalizedIllness}
+                        </option>
+                      );
+                    })}
                 </select>
               </div>
             </div>
@@ -396,8 +400,8 @@ function UK() {
               <div className="stats-card">
                 <h3>
                   {selectedCentre === 'all'
-                    ? `${selectedIllness} Nationwide`
-                    : `${selectedIllness} in ${selectedCentre}`}
+                    ? `${selectedIllnessCapitalized} Nationwide`
+                    : `${selectedIllnessCapitalized} in ${selectedCentre}`}
                 </h3>
                 <div className="rate-display">
                   {illnessRate !== null ? (
@@ -443,7 +447,7 @@ function UK() {
                         <>
                           <p>{selectedCentre === 'all'
                             ? `In the United Kingdom, people of the lowest income class are `
-                            : `In ${selectedCentre}, people of the lowest income class are `}<span className="rate-value">{discrepancyRate.toFixed(1)}</span> times more likely to be diagnosed with {selectedIllness} than the highest income class.</p>
+                            : `In ${selectedCentre}, people of the lowest income class are `}<span className="rate-value">{discrepancyRate.toFixed(1)}</span> times more likely to be diagnosed with {selectedIllness.toLowerCase()} than the highest income class.</p>
                         </>
                       ) : (
                         <span className="rate-na">Data not available</span>
@@ -500,66 +504,66 @@ function UK() {
 
             {/* Map markers */}
             {data
-  .filter(
-    (centre) =>
-      !isNaN(centre.latitude) &&
-      !isNaN(centre.longitude) &&
-      (selectedIllness === '' || centre.illness === selectedIllness)
-  )
-  .map((centre, index) => {
-    const isSelected = centre.assessment_centre === selectedMarker;
-    const illnessRate = selectedIllness ? parseFloat(centre.illness_rate) : null;
+              .filter(
+                (centre) =>
+                  !isNaN(centre.latitude) &&
+                  !isNaN(centre.longitude) &&
+                  (selectedIllness === '' || centre.illness === selectedIllness)
+              )
+              .map((centre, index) => {
+                const isSelected = centre.assessment_centre === selectedMarker;
+                const illnessRate = selectedIllness ? parseFloat(centre.illness_rate) : null;
 
-    return (
-      <CircleMarker
-        key={`${centre.assessment_centre}-${centre.illness}-${index}`}
-        center={[centre.latitude, centre.longitude]}
-        radius={isSelected ? 12 : 8}
-        pathOptions={{
-          fillColor: isSelected ? 'var(--green)' : 'var(--lightgray)',
-          color: isSelected ? '#333' : '#eee',
-          weight: isSelected ? 2 : 1,
-          opacity: 0.3,
-          fillOpacity: 0.9
-        }}
-        eventHandlers={{
-          click: () => handleMarkerClick(centre.assessment_centre),
-          mouseover: (e) => {
-            const layer = e.target;
-            if (!isSelected) {
-              layer.setStyle({
-                fillColor: 'var(--green)',
-                color: '#333',
-                weight: 1
-              });
-            }
-          },
-          mouseout: (e) => {
-            const layer = e.target;
-            if (!isSelected) {
-              layer.setStyle({
-                fillColor: 'var(--lightgray)',
-                color: '#eee',
-                weight: 1
-              });
-            }
-          }
-        }}
-      >
-        <Popup className="map-popup">
-          <h4>{centre.assessment_centre}</h4>
-          {selectedIllness && (
-            <div className="popup-content">
-              <div className="popup-rate">
-                {illnessRate?.toFixed(1) || 'N/A'}%
-              </div>
-              <p>of adults report {selectedIllness.toLowerCase()}</p>
-            </div>
-          )}
-        </Popup>
-      </CircleMarker>
-    );
-  })}
+                return (
+                  <CircleMarker
+                    key={`${centre.assessment_centre}-${centre.illness}-${index}`}
+                    center={[centre.latitude, centre.longitude]}
+                    radius={isSelected ? 12 : 8}
+                    pathOptions={{
+                      fillColor: isSelected ? 'var(--green)' : 'var(--lightgray)',
+                      color: isSelected ? '#333' : '#eee',
+                      weight: isSelected ? 2 : 1,
+                      opacity: 0.3,
+                      fillOpacity: 0.9
+                    }}
+                    eventHandlers={{
+                      click: () => handleMarkerClick(centre.assessment_centre),
+                      mouseover: (e) => {
+                        const layer = e.target;
+                        if (!isSelected) {
+                          layer.setStyle({
+                            fillColor: 'var(--green)',
+                            color: '#333',
+                            weight: 1
+                          });
+                        }
+                      },
+                      mouseout: (e) => {
+                        const layer = e.target;
+                        if (!isSelected) {
+                          layer.setStyle({
+                            fillColor: 'var(--lightgray)',
+                            color: '#eee',
+                            weight: 1
+                          });
+                        }
+                      }
+                    }}
+                  >
+                    <Popup className="map-popup">
+                      <h4>{centre.assessment_centre}</h4>
+                      {selectedIllness && (
+                        <div className="popup-content">
+                          <div className="popup-rate">
+                            {illnessRate?.toFixed(1) || 'N/A'}%
+                          </div>
+                          <p>of adults report {selectedIllness.toLowerCase()}</p>
+                        </div>
+                      )}
+                    </Popup>
+                  </CircleMarker>
+                );
+              })}
           </MapContainer>
         </div>
       </div>
