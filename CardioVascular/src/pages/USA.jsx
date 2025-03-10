@@ -48,6 +48,11 @@ function USA() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    // This effect will run whenever selectedState changes
+    // You can add any additional logic here if needed
+  }, [selectedState]);
+
   const handleStateChange = (event) => {
     const state = event.target.value;
     setSelectedState(state);
@@ -160,57 +165,72 @@ function USA() {
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             />
 
-            {data
-              .filter(
-                (state) =>
-                  !isNaN(state.Latitude) &&
-                  !isNaN(state.Longitude)
-              )
-              .map((state, index) => {
-                const conditionRate = selectedCondition ? parseFloat(state[selectedCondition]) : null;
-                const isSelected = state.State === selectedState;
+{data
+  .filter((state) => 
+    !isNaN(state.Latitude) && 
+    !isNaN(state.Longitude) &&
+    (selectedCondition === '' || state[selectedCondition] !== undefined)
+  )
+  .map((state, index) => {
+    const isSelected = state.State === selectedState;
+    const conditionRate = selectedCondition ? parseFloat(state[selectedCondition]) : null;
 
-                return (
-                  <CircleMarker
-                    key={`${state.State}-${index}`}
-                    center={[state.Latitude, state.Longitude]}
-                    radius={isSelected ? 12 : 8}
-                    fillColor={
-                      selectedCondition
-                        ? colorScale(conditionRate || 0)
-                        : isSelected
-                        ? '#ff4444'
-                        : '#4a90e2'
-                    }
-                    color="#333"
-                    weight={isSelected ? 2 : 1}
-                    opacity={0.8}
-                    fillOpacity={0.9}
-                    eventHandlers={{
-                      click: () => {
-                        setSelectedState(state.State);
-                        updateConditionRate(state.State, selectedCondition);
-                      },
-                    }}
-                  >
-                    <Popup className="map-popup">
-                      <h4>{state.State}</h4>
-                      {selectedCondition && (
-                        <div className="popup-content">
-                          <div className="popup-rate">
-                            {conditionRate?.toFixed(1) || 'N/A'}%
-                          </div>
-                          <p>of adults report {selectedCondition.toLowerCase()}</p>
-                        </div>
-                      )}
-                    </Popup>
-                  </CircleMarker>
-                );
-              })}
+    return (
+      <CircleMarker
+        key={`${state.State}-${selectedCondition}-${index}`}
+        center={[state.Latitude, state.Longitude]}
+        radius={isSelected ? 12 : 8}
+        pathOptions={{
+          fillColor: isSelected ? 'var(--green)' : 'var(--lightgray)',
+          color: isSelected ? '#333' : '#eee',
+          weight: isSelected ? 2 : 1,
+          opacity: 0.3,
+          fillOpacity: 0.9
+        }}
+        eventHandlers={{
+          click: () => {
+            setSelectedState(state.State);
+            updateConditionRate(state.State, selectedCondition);
+          },
+          mouseover: (e) => {
+            const layer = e.target;
+            if (!isSelected) {
+              layer.setStyle({
+                fillColor: 'var(--green)',
+                color: '#333',
+                weight: 1
+              });
+            }
+          },
+          mouseout: (e) => {
+            const layer = e.target;
+            if (!isSelected) {
+              layer.setStyle({
+                fillColor: 'var(--lightgray)',
+                color: '#eee',
+                weight: 1
+              });
+            }
+          }
+        }}
+      >
+        <Popup className="map-popup">
+          <h4>{state.State}</h4>
+          {selectedCondition && (
+            <div className="popup-content">
+              <div className="popup-rate">
+                {conditionRate?.toFixed(1) || 'N/A'}%
+              </div>
+              <p>of adults report {selectedCondition.toLowerCase()}</p>
+            </div>
+          )}
+        </Popup>
+      </CircleMarker>
+    );
+  })}
           </MapContainer>
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

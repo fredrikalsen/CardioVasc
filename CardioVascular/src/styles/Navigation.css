@@ -1,59 +1,87 @@
+/* Navigation.css */
+:root {
+    --lightestgray: #c2c4c5;
+    --lightgray: #686D76;
+    --darkgray: #373A40;
+    --green: #DC5F00;
+    --white: #EEEEEE;
+}
+
 .header {
     display: flex;
     align-items: center;
     background-color: var(--white);
     padding: 0 40px;
     height: 100px;
-    box-shadow: none;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     position: relative;
 }
 
+
 .logo-container {
-    width: 300px;
     flex-shrink: 0;
+    z-index: 2;
+    margin-left: 100px; /* Increased from 60px */
+    margin-right: auto; /* Pushes title to center */
 }
 
 .logo-text {
-    color: #202227;
+    color: var(--darkgray);
     background: none;
     border: none;
     font-size: 2rem;
-    font-weight: bold;
+    font-weight: 600;
     cursor: pointer;
     padding: 10px;
     transition: color 0.3s ease;
-    height: 100%;
     display: flex;
     align-items: center;
-    margin-left: 60px;
+}
+
+.logo-text:hover {
+    color: var(--green);
 }
 
 .title-container {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    width: auto;
-    pointer-events: none;
+    width: 60%;
 }
 
 .main-title {
-    color: #202227;
+    color: black;
     margin: 0;
     font-size: 1.4rem;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
     text-align: center;
-    white-space: nowrap;
+}
+
+.title-main {
+    color: #373A40;
+    font-weight: 400;
+}
+
+.title-highlight {
+    color: var(--green);
+    font-weight: 600;
+}
+
+.title-single {
+    color: var(--darkgray);
+    font-weight: 600;
 }
 
 .menu-container {
     margin-left: auto;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    height: 100%;
+    z-index: 2;
 }
 
 .menu-list {
@@ -62,34 +90,51 @@
     gap: 30px;
     margin: 0;
     padding: 0;
-    align-items: center;
-    height: 100%;
 }
 
 .menu-item {
-    font-size: 1.1rem;
-    font-weight: bold;
+    position: relative;
 }
 
 .menu-link {
     text-decoration: none;
-    color: #202227;
+    color: var(--darkgray);
     padding: 12px 18px;
     border-radius: 5px;
     transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    height: 100%;
+    font-weight: 600;
 }
 
 .menu-link:hover {
     color: var(--green);
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(220, 95, 0, 0.1);
 }
 
 .menu-link.active {
-    background-color: var(--darkgray);
     color: var(--green);
+    background-color: rgba(220, 95, 0, 0.15);
+}
+
+@media (max-width: 1024px) {
+    .header {
+        padding: 0 20px;
+    }
+    
+    .logo-text {
+        font-size: 1.8rem;
+    }
+    
+    .main-title {
+        font-size: 1.2rem;
+    }
+    
+    .menu-list {
+        gap: 20px;
+    }
+    
+    .menu-link {
+        padding: 10px 15px;
+    }
 }
 
 @media (max-width: 768px) {
@@ -102,42 +147,54 @@
     
     .logo-container {
         width: 100%;
-        margin-left: 0;
-        order: 1;
+        text-align: center;
     }
     
     .title-container {
         position: static;
         transform: none;
-        order: 3;
         width: 100%;
-        padding: 15px 0;
+        order: 2;
     }
     
     .main-title {
-        font-size: 1.2rem;
+        flex-direction: column;
+        gap: 4px;
+        font-size: 1.1rem;
     }
     
     .menu-container {
-        order: 2;
         width: 100%;
-        justify-content: center;
-        padding: 10px 0;
-    }
-    
-    .logo-text {
-        font-size: 1.8rem;
-        justify-content: center;
         margin-left: 0;
+        order: 3;
     }
     
     .menu-list {
-        gap: 15px;
         justify-content: center;
+        flex-wrap: wrap;
+        gap: 12px;
     }
     
     .menu-link {
         padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo-text {
+        font-size: 1.5rem;
+    }
+    
+    .main-title {
         font-size: 1rem;
+    }
+    
+    .menu-link {
+        padding: 6px 10px;
+    }
+    
+    .title-main, .title-highlight {
+        text-align: center;
     }
 }

@@ -20,6 +20,7 @@ function UK() {
   const [chartOptions1, setChartOptions1] = useState({});
   const [selectedYearData, setSelectedYearData] = useState([]);
   const [discrepancyRate, setDiscrepancyRate] = useState(null);
+  const [selectedMarker, setSelectedMarker] = useState(null);
 
   const ukBounds = [
     [49.8, -8.0],
@@ -49,6 +50,13 @@ function UK() {
     };
     fetchData();
   }, []);
+
+
+    useEffect(() => {
+    // This effect will run whenever selectedCentre changes
+    // You can add any additional logic here if needed
+  }, [selectedCentre]);
+
 
   // Retrieve income data
   const csvFile = selectedCentre === "all" ? require('../income_CSV/all.csv') : require('../income_CSV/giniandprev.csv');
@@ -299,7 +307,7 @@ function UK() {
 
   const handleMarkerClick = (centreName) => {
     setSelectedCentre(centreName);
-    // If an illness is already selected, keep it
+    setSelectedMarker(centreName);  // This is the key change
     if (selectedIllness) updateIllnessRate(centreName, selectedIllness);
   };
 
@@ -492,50 +500,66 @@ function UK() {
 
             {/* Map markers */}
             {data
-              .filter(
-                (centre) =>
-                  !isNaN(centre.latitude) &&
-                  !isNaN(centre.longitude) &&
-                  (selectedIllness === '' || centre.illness === selectedIllness)
-              )
-              .map((centre, index) => {
-                const isSelected = centre.assessment_centre === selectedCentre;
-                const illnessRate = selectedIllness ? parseFloat(centre.illness_rate) : null;
+  .filter(
+    (centre) =>
+      !isNaN(centre.latitude) &&
+      !isNaN(centre.longitude) &&
+      (selectedIllness === '' || centre.illness === selectedIllness)
+  )
+  .map((centre, index) => {
+    const isSelected = centre.assessment_centre === selectedMarker;
+    const illnessRate = selectedIllness ? parseFloat(centre.illness_rate) : null;
 
-                return (
-                  <CircleMarker
-                    key={`${centre.assessment_centre}-${centre.illness}-${index}`}
-                    center={[centre.latitude, centre.longitude]}
-                    radius={isSelected ? 12 : 8}
-                    fillColor={
-                      selectedIllness
-                        ? colorScale(illnessRate || 0)
-                        : isSelected
-                          ? '#ff4444'
-                          : '#4a90e2'
-                    }
-                    color="#333"
-                    weight={isSelected ? 2 : 1}
-                    opacity={0.8}
-                    fillOpacity={0.9}
-                    eventHandlers={{
-                      click: () => handleMarkerClick(centre.assessment_centre)
-                    }}
-                  >
-                    <Popup className="map-popup">
-                      <h4>{centre.assessment_centre}</h4>
-                      {selectedIllness && (
-                        <div className="popup-content">
-                          <div className="popup-rate">
-                            {illnessRate?.toFixed(1) || 'N/A'}%
-                          </div>
-                          <p>of adults report {selectedIllness.toLowerCase()}</p>
-                        </div>
-                      )}
-                    </Popup>
-                  </CircleMarker>
-                );
-              })}
+    return (
+      <CircleMarker
+        key={`${centre.assessment_centre}-${centre.illness}-${index}`}
+        center={[centre.latitude, centre.longitude]}
+        radius={isSelected ? 12 : 8}
+        pathOptions={{
+          fillColor: isSelected ? 'var(--green)' : 'var(--lightgray)',
+          color: isSelected ? '#333' : '#eee',
+          weight: isSelected ? 2 : 1,
+          opacity: 0.3,
+          fillOpacity: 0.9
+        }}
+        eventHandlers={{
+          click: () => handleMarkerClick(centre.assessment_centre),
+          mouseover: (e) => {
+            const layer = e.target;
+            if (!isSelected) {
+              layer.setStyle({
+                fillColor: 'var(--green)',
+                color: '#333',
+                weight: 1
+              });
+            }
+          },
+          mouseout: (e) => {
+            const layer = e.target;
+            if (!isSelected) {
+              layer.setStyle({
+                fillColor: 'var(--lightgray)',
+                color: '#eee',
+                weight: 1
+              });
+            }
+          }
+        }}
+      >
+        <Popup className="map-popup">
+          <h4>{centre.assessment_centre}</h4>
+          {selectedIllness && (
+            <div className="popup-content">
+              <div className="popup-rate">
+                {illnessRate?.toFixed(1) || 'N/A'}%
+              </div>
+              <p>of adults report {selectedIllness.toLowerCase()}</p>
+            </div>
+          )}
+        </Popup>
+      </CircleMarker>
+    );
+  })}
           </MapContainer>
         </div>
       </div>

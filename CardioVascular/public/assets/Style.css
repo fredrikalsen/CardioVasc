@@ -60,6 +60,7 @@ header .butt {
     font-weight: bold;
 }
 
+
 .active {
     background-color: var(--darkgray);
 }
@@ -163,13 +164,13 @@ svg {
 }
 
 /* The styling for the map */
-svg path {
+.map svg path {
     fill: var(--lightgray);
     stroke: #eee;
     stroke-width: .25;
 }
 
-svg path:hover {
+.map svg path:hover {
     fill: var(--green);
     transition: 0.6s;
     cursor: pointer;
