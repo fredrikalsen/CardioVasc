@@ -382,18 +382,23 @@ function UK() {
                   value={selectedIllness}
                   onChange={handleIllnessChange}
                 >
-                  {illnesses.filter(illness => typeof illness === "string" && illness.length > 0)
-                    .map((illness, index) => {
-                      const capitalizedIllness = illness.charAt(0).toUpperCase() + illness.slice(1);
-                      return (
-                        <option key={`${illness}-${index}`} value={illness}>
-                          {capitalizedIllness}
-                        </option>
-                      );
-                    })}
+                  <option value="">Select Condition</option>
+                  {illnesses.map((illness, index) => {
+                    const capitalizedIllness =
+                      typeof illness === "string" && illness.length > 0
+                        ? illness.charAt(0).toUpperCase() + illness.slice(1)
+                        : illness;
+
+                    return (
+                      <option key={`${illness}-${index}`} value={illness}>
+                        {capitalizedIllness}
+                      </option>
+                    );
+                  })}
                 </select>
               </div>
             </div>
+
 
             {/* Stats Card */}
             {selectedIllness && (
@@ -567,7 +572,7 @@ function UK() {
           </MapContainer>
         </div>
       </div>
-    </div>
+    </div >
   );
 }
 
