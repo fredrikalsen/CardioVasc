@@ -21,7 +21,7 @@
 .logo-container {
     flex-shrink: 0;
     z-index: 2;
-    margin-left: 100px; /* Increased from 60px */
+    margin-left: 70px; /* Increased from 60px */
     margin-right: auto; /* Pushes title to center */
 }
 
@@ -30,9 +30,9 @@
     background: none;
     border: none;
     font-size: 2rem;
-    font-weight: 600;
+    font-weight: 500;
     cursor: pointer;
-    padding: 10px;
+    padding: 1px;
     transition: color 0.3s ease;
     display: flex;
     align-items: center;
@@ -115,7 +115,7 @@
     background-color: rgba(220, 95, 0, 0.15);
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1530px) {
     .header {
         padding: 0 20px;
     }
@@ -137,17 +137,21 @@
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1322px) {
     .header {
         flex-direction: column;
         height: auto;
         padding: 20px;
         gap: 15px;
+        align-items: center; /* Center the header content */
     }
     
     .logo-container {
         width: 100%;
+        display: flex;
+        justify-content: center; /* Ensure the logo text is centered */
         text-align: center;
+        margin-left: 0;
     }
     
     .title-container {
@@ -196,5 +200,13 @@
     
     .title-main, .title-highlight {
         text-align: center;
+    }
+
+    /* Ensure the CardioVascularView text is centered */
+    .logo-container {
+        display: flex;
+        justify-content: center; /* Center the text */
+        text-align: center;
+        width: 100%;
     }
 }

@@ -80,3 +80,23 @@
         font-size: 12px;
     }
 }
+
+@media (max-width: 1024px) {
+    .footer-logo {
+        width: 380px; /* Smaller size for tablets */
+    }
+}
+
+/* For mobile screens */
+@media (max-width: 768px) {
+    .footer-logo {
+        width: 400px; /* Smaller size for mobile devices */
+    }
+}
+
+/* For very small mobile screens */
+@media (max-width: 480px) {
+    .footer-logo {
+        width: 360px; /* Even smaller for very small screens */
+    }
+}
