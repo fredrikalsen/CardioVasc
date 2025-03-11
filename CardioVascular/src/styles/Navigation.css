@@ -53,7 +53,7 @@
 }
 
 .main-title {
-    color: black;
+    color: var(--darkgray);
     margin: 0;
     font-size: 1.4rem;
     display: flex;
@@ -115,13 +115,14 @@
     background-color: rgba(220, 95, 0, 0.15);
 }
 
-@media (max-width: 1530px) {
+@media (max-width: 1580px) {
     .header {
         padding: 0 20px;
     }
     
     .logo-text {
         font-size: 1.8rem;
+        margin-left: 10%;
     }
     
     .main-title {
@@ -137,7 +138,7 @@
     }
 }
 
-@media (max-width: 1322px) {
+@media (max-width: 1350px) {
     .header {
         flex-direction: column;
         height: auto;
@@ -152,6 +153,10 @@
         justify-content: center; /* Ensure the logo text is centered */
         text-align: center;
         margin-left: 0;
+    }
+
+    .logo-text {
+        margin-left: 0%;
     }
     
     .title-container {

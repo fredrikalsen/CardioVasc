@@ -49,6 +49,19 @@ header .butt {
     display: flex;
 }
 
+.main-title {
+    color: #373A40;
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 400;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+}
+
 .btn {
     border: none;
     height: 79px;
@@ -465,6 +478,20 @@ svg {
         margin-top: 40px;
     }
 }
+
+
+  
+  @media (max-width: 1920px) {
+    .main-title {
+      font-size: 1.2rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .main-title {
+      font-size: 1rem;
+    }
+  }
 
 @media (max-width: 1024px) {
     .information {

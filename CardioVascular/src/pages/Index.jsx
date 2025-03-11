@@ -121,19 +121,27 @@ function Index() {
     // Function to handle input change and filter years
     const handleYearInputChangeLeft = (e) => {
         const input = e.target.value;
-
-        // Validate year input
-        if (input && !availableYears.includes(input)) {
-            alert("Please enter a valid year from 1990 to 2021.");
-            e.target.value = ""; // Clear invalid input
-            setInputYearLeft("");
-            return;
+    
+        // Only allow numeric input
+        if (!/^\d*$/.test(input)) {
+            return; // Ignore non-numeric input
         }
-
-        setInputYearLeft(input);
-
+    
+        setInputYearLeft(input); // Update input state
+    
+        if (input.length === 4) { // Only validate if 4 digits are entered
+            const year = parseInt(input, 10);
+            if (year < 1990 || year > 2021) {
+                alert("Please enter a valid year from 1990 to 2021.");
+                setInputYearLeft(""); // Clear invalid input
+                setFilteredYearsLeft([]); // Hide suggestions
+                return;
+            }
+        }
+    
+        // Filter available years based on input
         const matchingYears = availableYears.filter((year) =>
-            year.startsWith(input)
+            year.toString().startsWith(input)
         );
         setFilteredYearsLeft(matchingYears);
     };
@@ -661,18 +669,7 @@ function Index() {
                 <div className="title-container">
                 <h2
   className="main-title"
-  style={{
-    color: '#373A40',
-    margin: 0,
-    fontSize: '1.4rem',
-    fontWeight: 400,
-    display: 'flex',
-    gap: '8px',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    textAlign: 'center'
-  }}
+
 >
   Prevalence Rate of Cardiovascular Diseases Global
 </h2>
