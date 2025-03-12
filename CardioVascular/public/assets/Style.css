@@ -156,6 +156,14 @@ header .butt {
     width: 100%;
 }
 
+/* Bug fix: content in information and map overlapping footer upon window resizing */
+.information,
+.map {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100vw;
+}
+
 /* The box the map is in */
 .map {
     display: inline-block;
