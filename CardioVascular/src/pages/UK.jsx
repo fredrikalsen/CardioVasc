@@ -28,6 +28,16 @@ function UK() {
     [60.9, 2.0],
   ];
 
+  const existingMinTooltip = document.getElementById("min-tooltip");
+  if (existingMinTooltip) {
+    existingMinTooltip.remove();
+  }
+
+  const existingMaxTooltip = document.getElementById("max-tooltip");
+  if (existingMaxTooltip) {
+    existingMaxTooltip.remove();
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch('./data/heart_disease_rates.csv');

@@ -117,13 +117,13 @@ function Index() {
 
     const availableYears = Array.from({ length: 2021 - 1990 + 1 }, (_, i) => (1990 + i).toString()); // years 1990 to 2021
 
-
     // Function to handle input change and filter years
     const handleYearInputChangeLeft = (e) => {
         const input = e.target.value;
 
         // Validate year input
-        if (input && !availableYears.includes(input)) {
+        //input.length === 4: wait until user inputs 4 digits to show error message
+        if (input.length === 4 && !availableYears.includes(input)) {
             alert("Please enter a valid year from 1990 to 2021.");
             e.target.value = ""; // Clear invalid input
             setInputYearLeft("");
@@ -143,7 +143,7 @@ function Index() {
         selectInput(countryName);  // Updates the input field with the selected country
         setSelectedCountry(countryName);  // Set the selected country
         setInputYearLeft("");  // Clear any previous year selection
-        //setSelectedYearRight([]); // Reset data for the new country selection
+        setSelectedYearRight([]); // Reset data for the new country selection
         setFilteredYearsLeft([]); // Reset filtered years
         setCountryRate(null); // Reset country rate to hide the div
         setSelectedYear(null); // Reset selected year
@@ -246,7 +246,15 @@ function Index() {
     };
 
     useEffect(() => {
+        const existingMinTooltip = document.getElementById("min-tooltip");
+        if (existingMinTooltip) {
+            existingMinTooltip.remove();
+        }
 
+        const existingMaxTooltip = document.getElementById("max-tooltip");
+        if (existingMaxTooltip) {
+            existingMaxTooltip.remove();
+        }
         Papa.parse(WordCSV, {
             download: true,  // Downloads the CSV file
             header: true,  // Treats the first row as the header
@@ -659,23 +667,23 @@ function Index() {
                 </div>
 
                 <div className="title-container">
-                <h2
-  className="main-title"
-  style={{
-    color: '#373A40',
-    margin: 0,
-    fontSize: '1.4rem',
-    fontWeight: 400,
-    display: 'flex',
-    gap: '8px',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    textAlign: 'center'
-  }}
->
-  Prevalence Rate of Cardiovascular Diseases Global
-</h2>
+                    <h2
+                        className="main-title"
+                        style={{
+                            color: '#373A40',
+                            margin: 0,
+                            fontSize: '1.4rem',
+                            fontWeight: 400,
+                            display: 'flex',
+                            gap: '8px',
+                            alignItems: 'center',
+                            flexWrap: 'wrap',
+                            justifyContent: 'center',
+                            textAlign: 'center'
+                        }}
+                    >
+                        Prevalence Rate of Cardiovascular Diseases Global
+                    </h2>
                 </div>
 
                 <div className="menu-container">

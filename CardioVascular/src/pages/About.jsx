@@ -3,6 +3,16 @@ import '../styles/About.css';
 import Header from '../components/Header';
 
 function About() {
+  const existingMinTooltip = document.getElementById("min-tooltip");
+  if (existingMinTooltip) {
+    existingMinTooltip.remove();
+  }
+
+  const existingMaxTooltip = document.getElementById("max-tooltip");
+  if (existingMaxTooltip) {
+    existingMaxTooltip.remove();
+  }
+  
   const heartConditions = [
     { name: "Angina", description: "Chest pain due to reduced blood flow to the heart." },
     { name: "Atrial Fibrillation", description: "Irregular heart rhythm increasing stroke risk." },
@@ -30,7 +40,7 @@ function About() {
           </div>
           <div className="hero-pattern"></div>
         </div>
-        
+
         <div className="main-content">
           <h2>What We Cover</h2>
           <div className="conditions-grid">
