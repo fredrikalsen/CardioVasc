@@ -161,7 +161,7 @@ header .butt {
     display: inline-block;
     vertical-align: top;
     width: 1030px;
-    background-color: var(--lightestgray);
+    background-color: rgba(213, 220, 223, 0.71);
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     position: relative;
@@ -199,7 +199,7 @@ svg {
     display: inline-block;
     vertical-align: top;
     width: 480px;
-    background-color: var(--lightestgray);
+    background-color: rgba(213, 220, 223, 0.71);
     border-radius: 10px;
     border: 1px solid transparent;
     /* Standardize borders */
@@ -480,18 +480,18 @@ svg {
 }
 
 
-  
-  @media (max-width: 1920px) {
+
+@media (max-width: 1920px) {
     .main-title {
-      font-size: 1.2rem;
+        font-size: 1.2rem;
     }
-  }
-  
-  @media (max-width: 480px) {
+}
+
+@media (max-width: 480px) {
     .main-title {
-      font-size: 1rem;
+        font-size: 1rem;
     }
-  }
+}
 
 @media (max-width: 1024px) {
     .information {
@@ -597,10 +597,11 @@ svg {
         left: 5px;
         bottom: 3px;
     }
-    
+
     @media (max-width: 768px) {
         header {
-            background-image: none; /* Remove the favicon image on mobile */
+            background-image: none;
+            /* Remove the favicon image on mobile */
         }
     }
 
