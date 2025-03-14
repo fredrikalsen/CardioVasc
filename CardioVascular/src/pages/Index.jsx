@@ -120,14 +120,14 @@ function Index() {
     // Function to handle input change and filter years
     const handleYearInputChangeLeft = (e) => {
         const input = e.target.value;
-    
+
         // Only allow numeric input
         if (!/^\d*$/.test(input)) {
             return; // Ignore non-numeric input
         }
-    
+
         setInputYearLeft(input); // Update input state
-    
+
         if (input.length === 4) { // Only validate if 4 digits are entered
             const year = parseInt(input, 10);
             if (year < 1990 || year > 2021) {
@@ -137,7 +137,7 @@ function Index() {
                 return;
             }
         }
-    
+
         // Filter available years based on input
         const matchingYears = availableYears.filter((year) =>
             year.toString().startsWith(input)
@@ -149,15 +149,16 @@ function Index() {
     const handleCountryClick = (countryName) => {
         selectInput(countryName);  // Updates the input field with the selected country
         setSelectedCountry(countryName);  // Set the selected country
-        setInputYearLeft("");  // Clear any previous year selection
+        //setInputYearLeft("");  // Clear any previous year selection
         setSelectedYearRight([]); // Reset data for the new country selection
         setFilteredYearsLeft([]); // Reset filtered years
-        setCountryRate(null); // Reset country rate to hide the div
-        setSelectedYear(null); // Reset selected year
+        //setCountryRate(null); // Reset country rate to hide the div
+        selectYearLeft(selectedYear);
+        //setSelectedYear(null); // Reset selected year
 
         // Clear the right-side state
         setInputYearRight("");
-        setSelectedYearRight("");
+        setSelectedYearRight(inputYearRight);
         setShowGradientScale(false);
         // Clear tooltips for min and max rate countries
         const existingMinTooltip = document.getElementById("min-tooltip");
@@ -674,12 +675,12 @@ function Index() {
                 </div>
 
                 <div className="title-container">
-                <h2
-  className="main-title"
+                    <h2
+                        className="main-title"
 
->
-  Prevalence Rate of Cardiovascular Diseases Global
-</h2>
+                    >
+                        Prevalence Rate of Cardiovascular Diseases Global
+                    </h2>
                 </div>
 
                 <div className="menu-container">
