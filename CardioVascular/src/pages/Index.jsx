@@ -195,63 +195,65 @@ function Index() {
             header: true,  // Treats the first row as the header
             dynamicTyping: true,  // Converts numeric strings to actual numbers
             complete: (result) => {  // This function is called when parsing is done
-                // Check for any parsing errors and log them
                 if (result.errors.length > 0) {
                     console.error("Parsing errors:", result.errors);
                     return;
                 }
+        
                 setSelectedYearRight(result.data);  // Store all years' data for the country
-
-                // Log data to confirm it's parsed correctly
+        
                 console.log("Parsed Data:", result.data);
-
-                // Extract year data from the CSV and filter out empty values
-                const years = result.data.map(item => item[' "Year"']).filter(Boolean);
-
-                // Extract percentage data from the CSV and filter out empty values
-                const ages = result.data.map(item => item[' "Percent"']).filter(Boolean);
-
-                // Normalize and clean up the data
+        
+                // Extract and clean up the year and percentage data
                 const cleanedData = result.data.map(item => ({
                     Year: parseInt(item[' "Year"']?.toString().trim(), 10),
                     Percent: parseFloat(item[' "Percent"']?.toString().trim())
-                }));
-
+                })).filter(item => !isNaN(item.Year) && !isNaN(item.Percent)); // Filter out invalid data
+        
                 console.log(`Data fetched for ${countryName}:`, cleanedData);
-
+        
                 setSelectedYearData(cleanedData); // Store the cleaned data in the state
-
-                // Update the chart data with parsed years and percentages
+        
+                // **Auto-select the most recent year**
+                if (cleanedData.length > 0) {
+                    const mostRecentYear = cleanedData.reduce((prev, current) => 
+                        prev.Year > current.Year ? prev : current
+                    );
+        
+                    setSelectedYear(mostRecentYear.Year);
+                    setCountryRate(mostRecentYear.Percent); // Automatically set the prevalence rate
+                }
+        
+                // Update the chart data
                 setChartData1({
-                    labels: years,  // Labels on the X-axis (years)
+                    labels: cleanedData.map(item => item.Year),  // X-axis (years)
                     datasets: [
                         {
                             label: countryName,  // Label of the dataset (country name)
-                            data: ages,  // Data for the Y-axis (percentages)
-                            borderColor: "black",  // Color of the border around the bars
-                            backgroundColor: "#DC5F00"  // Color of the bars (orange)
+                            data: cleanedData.map(item => item.Percent),  // Y-axis (percentages)
+                            borderColor: "black",
+                            backgroundColor: "#DC5F00"
                         }
                     ]
                 });
-
-                // Set up the chart options (appearance and behavior of the chart)
+        
+                // Set chart options
                 setChartOptions1({
-                    maintainAspectRatio: false,  // Disable maintaining the aspect ratio for responsiveness
-                    responsive: true,  // Make the chart responsive to the container size
+                    maintainAspectRatio: false,
+                    responsive: true,
                     plugins: {
                         legend: {
-                            position: "top",  // Place the legend at the top
-                            display: false  // Hide the legend
+                            position: "top",
+                            display: false
                         },
                         title: {
-                            display: true,  // Display the chart title
-                            text: "Prevalence of Cardiovascular Diseases (%) Country"  // Title text
+                            display: true,
+                            text: "Prevalence of Cardiovascular Diseases (%) Country"
                         }
                     }
                 });
             }
-        });
-    };
+        })};
 
     useEffect(() => {
         const existingMinTooltip = document.getElementById("min-tooltip");
