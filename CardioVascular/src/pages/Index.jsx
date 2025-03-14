@@ -153,7 +153,11 @@ function Index() {
         setSelectedYearRight([]); // Reset data for the new country selection
         setFilteredYearsLeft([]); // Reset filtered years
         //setCountryRate(null); // Reset country rate to hide the div
-        selectYearLeft(selectedYear);
+        //if (selectedYear) { selectYearLeft(selectedYear); }
+        if (availableYears.includes(inputYearLeft)) {
+            console.log(inputYearLeft);
+            selectYearLeft(inputYearLeft);
+        }
         //setSelectedYear(null); // Reset selected year
 
         // Clear the right-side state
@@ -199,31 +203,31 @@ function Index() {
                     console.error("Parsing errors:", result.errors);
                     return;
                 }
-        
+
                 setSelectedYearRight(result.data);  // Store all years' data for the country
-        
+
                 console.log("Parsed Data:", result.data);
-        
+
                 // Extract and clean up the year and percentage data
                 const cleanedData = result.data.map(item => ({
                     Year: parseInt(item[' "Year"']?.toString().trim(), 10),
                     Percent: parseFloat(item[' "Percent"']?.toString().trim())
                 })).filter(item => !isNaN(item.Year) && !isNaN(item.Percent)); // Filter out invalid data
-        
+
                 console.log(`Data fetched for ${countryName}:`, cleanedData);
-        
+
                 setSelectedYearData(cleanedData); // Store the cleaned data in the state
-        
+
                 // **Auto-select the most recent year**
-                if (cleanedData.length > 0) {
-                    const mostRecentYear = cleanedData.reduce((prev, current) => 
+                if (cleanedData.length > 0 && !selectedYear) {
+                    const mostRecentYear = cleanedData.reduce((prev, current) =>
                         prev.Year > current.Year ? prev : current
                     );
-        
+
                     setSelectedYear(mostRecentYear.Year);
                     setCountryRate(mostRecentYear.Percent); // Automatically set the prevalence rate
                 }
-        
+
                 // Update the chart data
                 setChartData1({
                     labels: cleanedData.map(item => item.Year),  // X-axis (years)
@@ -236,7 +240,7 @@ function Index() {
                         }
                     ]
                 });
-        
+
                 // Set chart options
                 setChartOptions1({
                     maintainAspectRatio: false,
@@ -253,7 +257,8 @@ function Index() {
                     }
                 });
             }
-        })};
+        })
+    };
 
     useEffect(() => {
         const existingMinTooltip = document.getElementById("min-tooltip");
@@ -573,6 +578,7 @@ function Index() {
         );
 
         if (yearData && !isNaN(yearData.Percent)) {
+            console.log("Setting year data", yearData.Percent);
             setCountryRate(yearData.Percent);
         } else {
             setCountryRate("Data Unavailable");
