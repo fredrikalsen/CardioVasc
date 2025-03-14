@@ -3,7 +3,7 @@
     --lightestgray: #c2c4c5;
     --lightgray: #686D76;
     --darkgray: #373A40;
-    --green: #DC5F00;
+    --green: #be0000;
     --white: #EEEEEE;
 }
 
@@ -21,8 +21,10 @@
 .logo-container {
     flex-shrink: 0;
     z-index: 2;
-    margin-left: 70px; /* Increased from 60px */
-    margin-right: auto; /* Pushes title to center */
+    margin-left: 70px;
+    /* Increased from 60px */
+    margin-right: auto;
+    /* Pushes title to center */
 }
 
 .logo-text {
@@ -107,32 +109,32 @@
 
 .menu-link:hover {
     color: var(--green);
-    background-color: rgba(220, 95, 0, 0.1);
+    background-color: rgba(220, 0, 0, 0.1);
 }
 
 .menu-link.active {
     color: var(--green);
-    background-color: rgba(220, 95, 0, 0.15);
+    background-color: rgba(220, 0, 0, 0.1);
 }
 
 @media (max-width: 1580px) {
     .header {
         padding: 0 20px;
     }
-    
+
     .logo-text {
         font-size: 1.8rem;
         margin-left: 10%;
     }
-    
+
     .main-title {
         font-size: 1.2rem;
     }
-    
+
     .menu-list {
         gap: 20px;
     }
-    
+
     .menu-link {
         padding: 10px 15px;
     }
@@ -144,13 +146,15 @@
         height: auto;
         padding: 20px;
         gap: 15px;
-        align-items: center; /* Center the header content */
+        align-items: center;
+        /* Center the header content */
     }
-    
+
     .logo-container {
         width: 100%;
         display: flex;
-        justify-content: center; /* Ensure the logo text is centered */
+        justify-content: center;
+        /* Ensure the logo text is centered */
         text-align: center;
         margin-left: 0;
     }
@@ -158,32 +162,32 @@
     .logo-text {
         margin-left: 0%;
     }
-    
+
     .title-container {
         position: static;
         transform: none;
         width: 100%;
         order: 2;
     }
-    
+
     .main-title {
         flex-direction: column;
         gap: 4px;
         font-size: 1.1rem;
     }
-    
+
     .menu-container {
         width: 100%;
         margin-left: 0;
         order: 3;
     }
-    
+
     .menu-list {
         justify-content: center;
         flex-wrap: wrap;
         gap: 12px;
     }
-    
+
     .menu-link {
         padding: 8px 12px;
         font-size: 0.9rem;
@@ -194,23 +198,25 @@
     .logo-text {
         font-size: 1.5rem;
     }
-    
+
     .main-title {
         font-size: 1rem;
     }
-    
+
     .menu-link {
         padding: 6px 10px;
     }
-    
-    .title-main, .title-highlight {
+
+    .title-main,
+    .title-highlight {
         text-align: center;
     }
 
     /* Ensure the CardioVascularView text is centered */
     .logo-container {
         display: flex;
-        justify-content: center; /* Center the text */
+        justify-content: center;
+        /* Center the text */
         text-align: center;
         width: 100%;
     }

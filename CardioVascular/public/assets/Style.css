@@ -3,7 +3,7 @@
     --lightestgray: #c2c4c5;
     --lightgray: #686D76;
     --darkgray: #373A40;
-    --green: #DC5F00;
+    --green: #be0000;
     --white: #EEEEEE;
 }
 
@@ -156,7 +156,7 @@ header .butt {
     width: 100%;
 }
 
-/* Bug fix: content in information and map overlapping footer upon window resizing */
+/* Bug fix: content in information and map overlapping footer and graph text*/
 .information,
 .map {
     overflow: hidden;

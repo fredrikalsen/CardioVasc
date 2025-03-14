@@ -186,7 +186,7 @@ function Index() {
         // Highlight only the selected country's path
         const selectedPath = document.querySelector(`svg path[title="${countryName}"]`);
         if (selectedPath) {
-            selectedPath.style.fill = "#FF7F50"; // Highlight the selected country with a distinct color
+            selectedPath.style.fill = "#be0000"; // Highlight the selected country with a distinct color
             selectedPath.classList.add("highlight");
         }
 
@@ -236,7 +236,7 @@ function Index() {
                             label: countryName,  // Label of the dataset (country name)
                             data: cleanedData.map(item => item.Percent),  // Y-axis (percentages)
                             borderColor: "black",
-                            backgroundColor: "#DC5F00"
+                            backgroundColor: "#be0000"
                         }
                     ]
                 });
@@ -252,7 +252,7 @@ function Index() {
                         },
                         title: {
                             display: true,
-                            text: "Prevalence of Cardiovascular Diseases (%) Country"
+                            text: "Prevalence of Cardiovascular Diseases (%) Per Country"
                         }
                     }
                 });
@@ -305,7 +305,7 @@ function Index() {
                             label: "World",  // Label of the dataset (country name)
                             data: ages,  // Data for the Y-axis (percentages)
                             borderColor: "black",  // Color of the border around the bars
-                            backgroundColor: "red"  // Color of the bars (red)
+                            backgroundColor: "#be0000"  // Color of the bars (red)
                         }
                     ]
                 });
