@@ -88,25 +88,36 @@ function UK() {
         //console.log("Parsed Data:", result.data);
 
         //Delete stroke from options (no data available for all UK)
+        // setIllnesses(prevIllnesses => {
+        //   if (!prevIllnesses.includes("stroke")) return prevIllnesses;
+        //   return prevIllnesses.filter(illness => illness !== "stroke");
+        // });
         setIllnesses(prevIllnesses => {
-          if (!prevIllnesses.includes("stroke")) return prevIllnesses;
-          return prevIllnesses.filter(illness => illness !== "stroke");
+          if (prevIllnesses.includes("stroke")) return prevIllnesses;
+          const newIllness = "stroke";
+          const indexToInsert = prevIllnesses.length > 0 ? prevIllnesses.length - 1 : 0;
+          const updatedIllnesses = [...prevIllnesses];
+          updatedIllnesses.splice(indexToInsert, 0, newIllness);
+          return updatedIllnesses;
         });
 
         // Extract income data from the CSV and filter out empty values
-        const incomes = result.data.map(item => item[' "Income"']).filter(Boolean);
+        console.log(selectedIllness);
+        const incomes = result.data.filter(item => item[' "Illness"'].trim() === selectedIllness).map(item => item[' "Income"']).filter(Boolean);
 
         // Extract percentage data from the CSV and filter out empty values
-        const percentages = result.data.map(item => item[' "Percent"']).filter(Boolean);
+        const percentages = result.data.filter(item => item[' "Illness"'].trim() === selectedIllness).map(item => item[' "Percent"']).filter(Boolean);
 
         // Normalize and clean up the data
-        const cleanedData = result.data.map(item => ({
-          Income: item[' "Income"']?.toString(),
-          Percent: parseFloat(item[' "Percent"']?.toString().trim())
-        }));
+        const cleanedData = result.data.filter(item => item[' "Illness"'].trim() === selectedIllness)
+          .map(item => ({
+            Income: item[' "Income"']?.toString(),
+            Percent: parseFloat(item[' "Percent"']?.toString().trim())
+          }));
 
         setSelectedYearData(cleanedData); // Store the cleaned data in the state
-        setGiniCoeff(0.3);
+        const gini = (selectedIllness === "angina") ? 0.3 : 0.35;
+        setGiniCoeff(gini);
 
         const discRate1 = cleanedData
           .filter(item => item.Income.trim() === "<18000")
@@ -153,7 +164,7 @@ function UK() {
             },
             title: {
               display: true,  // Display the chart title
-              text: "Prevalence of Angina (%) by Income"  // Title text
+              text: "Prevalence of " + selectedIllnessCapitalized + " (%) by Income"  // Title text
             },
             tooltip: {
               callbacks: {
@@ -434,7 +445,7 @@ function UK() {
             )}
 
             {/* Income Graph */}
-            {((selectedCentre === 'all' && selectedIllness === "angina") ||
+            {((selectedCentre === 'all' && (selectedIllness === "angina" || selectedIllness === "stroke")) ||
               (selectedCentre !== 'all' &&
                 (selectedIllness === "angina" ||
                   selectedIllness === "stroke" ||
@@ -451,7 +462,7 @@ function UK() {
                 </div>
               )}
             {/* Income Discrepancy Blurb */}
-            {((selectedCentre === 'all' && selectedIllness === "angina") ||
+            {((selectedCentre === 'all' && (selectedIllness === "angina" || selectedIllness === "stroke")) ||
               (selectedCentre !== 'all' &&
                 (selectedIllness === "angina" ||
                   selectedIllness === "stroke" ||
@@ -470,7 +481,7 @@ function UK() {
                     </div>
                   </div>)}
             {/* Gini Coefficient */}
-            {((selectedCentre === 'all' && selectedIllness === "angina") ||
+            {((selectedCentre === 'all' && (selectedIllness === "angina" || selectedIllness === "stroke")) ||
               (selectedCentre !== 'all' &&
                 (selectedIllness === "angina" ||
                   selectedIllness === "stroke" ||
