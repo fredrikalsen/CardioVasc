@@ -8,6 +8,7 @@ Barts,heart valve problem/heart murmur,0.755948,11.718603,51.518,-0.1021
 Barts,heart/cardiac problem,0.262593,11.718603,51.518,-0.1021
 Barts,hypertension,24.516591,11.718603,51.518,-0.1021
 Barts,irregular heart beat,0.0,11.718603,51.518,-0.1021
+Barts,stroke,1.23399083855287,11.718603,51.518,-0.1021
 Birmingham,angina,3.147196,9.837194,52.4862,-1.8904
 Birmingham,atrial fibrillation,0.631794,9.837194,52.4862,-1.8904
 Birmingham,heart arrhythmia,0.227603,9.837194,52.4862,-1.8904
@@ -17,6 +18,7 @@ Birmingham,heart valve problem/heart murmur,0.321783,9.837194,52.4862,-1.8904
 Birmingham,heart/cardiac problem,0.239375,9.837194,52.4862,-1.8904
 Birmingham,hypertension,27.53208,9.837194,52.4862,-1.8904
 Birmingham,irregular heart beat,0.38457,9.837194,52.4862,-1.8904
+Birmingham,stroke,1.6112460302634,9.837194,52.4862,-1.8904
 Bristol,angina,1.993672,9.742221,51.4545,-2.5879
 Bristol,atrial fibrillation,0.783976,9.742221,51.4545,-2.5879
 Bristol,heart arrhythmia,0.490857,9.742221,51.4545,-2.5879
@@ -26,6 +28,7 @@ Bristol,heart valve problem/heart murmur,0.737449,9.742221,51.4545,-2.5879
 Bristol,heart/cardiac problem,0.386172,9.742221,51.4545,-2.5879
 Bristol,hypertension,25.080259,9.742221,51.4545,-2.5879
 Bristol,irregular heart beat,0.125622,9.742221,51.4545,-2.5879
+Bristol,stroke,1.20475490850808,9.742221,51.4545,-2.5879
 Bury,angina,4.031517,10.137005,53.5933,-2.2954
 Bury,atrial fibrillation,0.770264,10.137005,53.5933,-2.2954
 Bury,heart arrhythmia,0.953996,10.137005,53.5933,-2.2954
@@ -35,6 +38,7 @@ Bury,heart valve problem/heart murmur,0.950463,10.137005,53.5933,-2.2954
 Bury,heart/cardiac problem,0.296799,10.137005,53.5933,-2.2954
 Bury,hypertension,29.291216,10.137005,53.5933,-2.2954
 Bury,irregular heart beat,0.0,10.137005,53.5933,-2.2954
+Bury,stroke,1.77928314182816,10.137005,53.5933,-2.2954
 Cardiff,angina,3.25035,10.07952,51.4816,-3.1791
 Cardiff,atrial fibrillation,0.570629,10.07952,51.4816,-3.1791
 Cardiff,heart arrhythmia,0.565035,10.07952,51.4816,-3.1791
@@ -44,6 +48,7 @@ Cardiff,heart valve problem/heart murmur,0.900699,10.07952,51.4816,-3.1791
 Cardiff,heart/cardiac problem,0.481119,10.07952,51.4816,-3.1791
 Cardiff,hypertension,28.386014,10.07952,51.4816,-3.1791
 Cardiff,irregular heart beat,0.0,10.07952,51.4816,-3.1791
+Cardiff,stroke,1.43657798106036,10.07952,51.4816,-3.1791
 Croydon,angina,2.175344,10.117929,51.3721,-0.0982
 Croydon,atrial fibrillation,0.654431,10.117929,51.3721,-0.0982
 Croydon,heart arrhythmia,0.303451,10.117929,51.3721,-0.0982
@@ -53,6 +58,7 @@ Croydon,heart valve problem/heart murmur,0.40582,10.117929,51.3721,-0.0982
 Croydon,heart/cardiac problem,0.36926,10.117929,51.3721,-0.0982
 Croydon,hypertension,27.58482,10.117929,51.3721,-0.0982
 Croydon,irregular heart beat,0.398508,10.117929,51.3721,-0.0982
+Croydon,stroke,1.23542416229572,10.117929,51.3721,-0.0982
 Edinburgh,angina,3.117911,9.429059,55.9533,-3.1883
 Edinburgh,atrial fibrillation,0.63987,9.429059,55.9533,-3.1883
 Edinburgh,heart arrhythmia,0.570066,9.429059,55.9533,-3.1883
@@ -62,6 +68,7 @@ Edinburgh,heart valve problem/heart murmur,0.511896,9.429059,55.9533,-3.1883
 Edinburgh,heart/cardiac problem,0.180327,9.429059,55.9533,-3.1883
 Edinburgh,hypertension,24.984003,9.429059,55.9533,-3.1883
 Edinburgh,irregular heart beat,0.0,9.429059,55.9533,-3.1883
+Edinburgh,stroke,1.27256979145846,9.429059,55.9533,-3.1883
 Glasgow,angina,4.983638,9.534762,55.8642,-4.2518
 Glasgow,atrial fibrillation,0.686658,9.534762,55.8642,-4.2518
 Glasgow,heart arrhythmia,0.729575,9.534762,55.8642,-4.2518
@@ -71,6 +78,7 @@ Glasgow,heart valve problem/heart murmur,0.836865,9.534762,55.8642,-4.2518
 Glasgow,heart/cardiac problem,0.305778,9.534762,55.8642,-4.2518
 Glasgow,hypertension,28.238828,9.534762,55.8642,-4.2518
 Glasgow,irregular heart beat,0.0,9.534762,55.8642,-4.2518
+Glasgow,stroke,1.88379204892966,9.534762,55.8642,-4.2518
 Hounslow,angina,2.273436,10.257382,51.4678,-0.3625
 Hounslow,atrial fibrillation,0.745105,10.257382,51.4678,-0.3625
 Hounslow,heart arrhythmia,0.34656,10.257382,51.4678,-0.3625
@@ -80,6 +88,7 @@ Hounslow,heart valve problem/heart murmur,0.322301,10.257382,51.4678,-0.3625
 Hounslow,heart/cardiac problem,0.391613,10.257382,51.4678,-0.3625
 Hounslow,hypertension,26.290071,10.257382,51.4678,-0.3625
 Hounslow,irregular heart beat,0.422804,10.257382,51.4678,-0.3625
+Hounslow,stroke,1.08964834076275,10.257382,51.4678,-0.3625
 Leeds,angina,3.311678,9.980204,53.8008,-1.5491
 Leeds,atrial fibrillation,0.679086,9.980204,53.8008,-1.5491
 Leeds,heart arrhythmia,0.665505,9.980204,53.8008,-1.5491
@@ -89,6 +98,7 @@ Leeds,heart valve problem/heart murmur,0.928085,9.980204,53.8008,-1.5491
 Leeds,heart/cardiac problem,0.323698,9.980204,53.8008,-1.5491
 Leeds,hypertension,25.635512,9.980204,53.8008,-1.5491
 Leeds,irregular heart beat,0.0,9.980204,53.8008,-1.5491
+Leeds,stroke,1.41845859058974,9.980204,53.8008,-1.5491
 Liverpool,angina,4.092462,10.290017,53.4084,-2.9916
 Liverpool,atrial fibrillation,0.83252,10.290017,53.4084,-2.9916
 Liverpool,heart arrhythmia,0.524518,10.290017,53.4084,-2.9916
@@ -98,6 +108,7 @@ Liverpool,heart valve problem/heart murmur,0.609905,10.290017,53.4084,-2.9916
 Liverpool,heart/cardiac problem,0.317151,10.290017,53.4084,-2.9916
 Liverpool,hypertension,28.574042,10.290017,53.4084,-2.9916
 Liverpool,irregular heart beat,0.213467,10.290017,53.4084,-2.9916
+Liverpool,stroke,1.73482920534786,10.290017,53.4084,-2.9916
 Manchester,angina,3.609875,10.47033,53.4808,-2.2426
 Manchester,atrial fibrillation,0.696139,10.47033,53.4808,-2.2426
 Manchester,heart arrhythmia,0.782259,10.47033,53.4808,-2.2426
@@ -107,6 +118,7 @@ Manchester,heart valve problem/heart murmur,1.184154,10.47033,53.4808,-2.24266
 Manchester,heart/cardiac problem,0.351658,10.47033,53.4808,-2.2426
 Manchester,hypertension,27.917325,10.47033,53.4808,-2.2426
 Manchester,irregular heart beat,0.0,10.47033,53.4808,-2.2426
+Manchester,stroke,1.78179361594325,10.47033,53.4808,-2.2426
 Middlesborough,angina,3.811269,9.838713,54.5742,-1.2355
 Middlesborough,atrial fibrillation,0.860003,9.838713,54.5742,-1.2355
 Middlesborough,heart arrhythmia,0.234973,9.838713,54.5742,-1.2355
@@ -116,6 +128,7 @@ Middlesborough,heart valve problem/heart murmur,0.35716,9.838713,54.5742,-1.2355
 Middlesborough,heart/cardiac problem,0.192678,9.838713,54.5742,-1.2355
 Middlesborough,hypertension,27.482494,9.838713,54.5742,-1.2355
 Middlesborough,irregular heart beat,0.371258,9.838713,54.5742,-1.2355
+Middlesborough,stroke,1.53159605531376,9.838713,54.5742,-1.2355
 Newcastle,angina,4.101441,10.407536,54.9783,-1.6174
 Newcastle,atrial fibrillation,0.638062,10.407536,54.9783,-1.6174
 Newcastle,heart arrhythmia,0.754319,10.407536,54.9783,-1.6174
@@ -125,6 +138,7 @@ Newcastle,heart valve problem/heart murmur,0.613729,10.407536,54.9783,-1.6174
 Newcastle,heart/cardiac problem,0.332549,10.407536,54.9783,-1.6174
 Newcastle,hypertension,28.231541,10.407536,54.9783,-1.6174
 Newcastle,irregular heart beat,0.0,10.407536,54.9783,-1.6174
+Newcastle,stroke,1.62978750078355,10.407536,54.9783,-1.6174
 Nottingham,angina,3.130168,9.649127,52.9548,-1.1557
 Nottingham,atrial fibrillation,0.806166,9.649127,52.9548,-1.1557
 Nottingham,heart arrhythmia,0.502008,9.649127,52.9548,-1.1557
@@ -134,6 +148,7 @@ Nottingham,heart valve problem/heart murmur,0.699858,9.649127,52.9548,-1.1557
 Nottingham,heart/cardiac problem,0.377983,9.649127,52.9548,-1.1557
 Nottingham,hypertension,27.137964,9.649127,52.9548,-1.1557
 Nottingham,irregular heart beat,0.026577,9.649127,52.9548,-1.1557
+Nottingham,stroke,1.44316865058464,9.649127,52.9548,-1.1557
 Oxford,angina,2.270463,9.298244,51.752,-1.2577
 Oxford,atrial fibrillation,0.875445,9.298244,51.752,-1.2577
 Oxford,heart arrhythmia,0.619217,9.298244,51.752,-1.2577
@@ -143,6 +158,7 @@ Oxford,heart valve problem/heart murmur,0.967972,9.298244,51.752,-1.2577
 Oxford,heart/cardiac problem,0.270463,9.298244,51.752,-1.2577
 Oxford,hypertension,23.758007,9.298244,51.752,-1.2577
 Oxford,irregular heart beat,0.0,9.298244,51.752,-1.2577
+Oxford,stroke,1.17965101990661,9.298244,51.752,-1.2577
 Reading,angina,1.932499,9.517266,51.4542,-1.3041
 Reading,atrial fibrillation,0.745101,9.517266,51.4542,-1.3041
 Reading,heart arrhythmia,0.510343,9.517266,51.4542,-1.3041
@@ -152,6 +168,7 @@ Reading,heart valve problem/heart murmur,0.629423,9.517266,51.4542,-1.3041
 Reading,heart/cardiac problem,0.207539,9.517266,51.4542,-1.3041
 Reading,hypertension,24.186854,9.517266,51.4542,-1.3041
 Reading,irregular heart beat,0.0,9.517266,51.4542,-1.3041
+Reading,stroke,0.997060459203941,9.517266,51.4542,-1.3041
 Sheffield,angina,3.640913,9.747812,53.3811,-1.4701
 Sheffield,atrial fibrillation,0.743984,9.747812,53.3811,-1.4701
 Sheffield,heart arrhythmia,0.233729,9.747812,53.3811,-1.4701
@@ -161,6 +178,7 @@ Sheffield,heart valve problem/heart murmur,0.480627,9.747812,53.3811,-1.4701
 Sheffield,heart/cardiac problem,0.273233,9.747812,53.3811,-1.4701
 Sheffield,hypertension,27.339764,9.747812,53.3811,-1.4701
 Sheffield,irregular heart beat,0.664977,9.747812,53.3811,-1.4701
+Sheffield,stroke,1.69052695705148,9.747812,53.3811,-1.4701
 Stockport (pilot),angina,3.53562,10.344001,53.4084,-2.1494
 Stockport (pilot),atrial fibrillation,0.263852,10.344001,53.4084,-2.1494
 Stockport (pilot),heart arrhythmia,0.131926,10.344001,53.4084,-2.1494
@@ -170,6 +188,7 @@ Stockport (pilot),heart valve problem/heart murmur,0.712401,10.344001,53.4084,-2
 Stockport (pilot),heart/cardiac problem,0.290237,10.344001,53.4084,-2.1494
 Stockport (pilot),hypertension,27.044855,10.344001,53.4084,-2.1494
 Stockport (pilot),irregular heart beat,0.0,10.344001,53.4084,-2.1494
+Stockport (pilot),stroke,,10.344001,53.4084,-2.1494
 Stoke,angina,4.207003,9.52757,53.0027,-2.1853
 Stoke,atrial fibrillation,0.777549,9.52757,53.0027,-2.1853
 Stoke,heart arrhythmia,0.715757,9.52757,53.0027,-2.1853
@@ -179,6 +198,7 @@ Stoke,heart valve problem/heart murmur,0.916581,9.52757,53.0027,-2.1853
 Stoke,heart/cardiac problem,0.566426,9.52757,53.0027,-2.1853
 Stoke,hypertension,29.052523,9.52757,53.0027,-2.1853
 Stoke,irregular heart beat,0.0,9.52757,53.0027,-2.1853
+Stoke,stroke,1.74653489962086,9.52757,53.0027,-2.1853
 Swansea,angina,3.334796,9.940067,51.6214,-3.9436
 Swansea,atrial fibrillation,1.228609,9.940067,51.6214,-3.9436
 Swansea,heart arrhythmia,0.307152,9.940067,51.6214,-3.9436
@@ -188,6 +208,7 @@ Swansea,heart valve problem/heart murmur,0.658183,9.940067,51.6214,-3.9436
 Swansea,heart/cardiac problem,0.351031,9.940067,51.6214,-3.9436
 Swansea,hypertension,28.345766,9.940067,51.6214,-3.9436
 Swansea,irregular heart beat,0.658183,9.940067,51.6214,-3.9436
+Swansea,stroke,1.65118679050568,9.940067,51.6214,-3.9436
 Wrexham,angina,3.85208,9.57255,53.0464,-3.0026
 Wrexham,atrial fibrillation,0.154083,9.57255,53.0464,-3.0026
 Wrexham,heart arrhythmia,0.154083,9.57255,53.0464,-3.0026
@@ -197,3 +218,4 @@ Wrexham,heart valve problem/heart murmur,0.154083,9.57255,53.0464,-3.0026
 Wrexham,heart/cardiac problem,0.0,9.57255,53.0464,-3.0026
 Wrexham,hypertension,32.049307,9.57255,53.0464,-3.0026
 Wrexham,irregular heart beat,0.154083,9.57255,53.0464,-3.0026
+Wrexham,stroke,1.08108108108108,9.57255,53.0464,-3.0026
