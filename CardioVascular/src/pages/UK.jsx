@@ -148,7 +148,7 @@ function UK() {
               label: "United Kingdom",  // Label of the dataset (country name)
               data: percentages,  // Data for the Y-axis (percentages)
               borderColor: "black",  // Color of the border around the bars
-              backgroundColor: "#DC5F00"  // Color of the bars (orange)
+              backgroundColor: "#BE0000"  // Color of the bars (orange)
             }
           ]
         });
@@ -265,7 +265,7 @@ function UK() {
               label: "United Kingdom",  // Label of the dataset (country name)
               data: percentages,  // Data for the Y-axis (percentages)
               borderColor: "black",  // Color of the border around the bars
-              backgroundColor: "#DC5F00"  // Color of the bars (orange)
+              backgroundColor: "#BE0000"  // Color of the bars (orange)
             }
           ]
         });
