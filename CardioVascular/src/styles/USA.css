@@ -88,6 +88,20 @@
   display: none;
 }
 
+#incomeChart {
+  display: block;
+  width: 100%;
+  height: auto;
+  background-color: transparent; /* Ensure no background interferes */
+}
+
+
+.chart-container {
+  padding: 10px;
+  margin-top: 20px;
+  overflow: visible; /* Allow tooltips to overflow */
+  position: relative; /* Ensure proper positioning for tooltips */
+}
 
 .map-section {
   border-radius: 12px;
