@@ -1,7 +1,7 @@
 # CardioVascularView
 
 ## Overview
-CardioVascularView is an interactive web application that visualizes cardiovascular disease prevalence rates across different geographical regions. The application provides detailed insights into various heart conditions in the UK, USA, and globally, using data from reliable health organizations and biobanks.
+WorldHealthMap is an interactive web application that visualizes cardiovascular disease prevalence rates across different geographical regions. The application provides detailed insights into various heart conditions in the UK, USA, and globally, using data from reliable health organizations and biobanks.
 
 ## Features
 - **Interactive Maps**: 
