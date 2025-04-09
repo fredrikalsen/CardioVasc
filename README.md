@@ -30,7 +30,7 @@ WorldHealthMap is an interactive web application that visualizes cardiovascular 
 ## Usage
 1. Select a region (UK, USA, or Global) from the navigation menu
 2. Choose specific locations using the dropdown menus
-3. Select different cardiovascular conditions to view their prevalence
+3. Select different cardiovascular conditions to view their prevalence and inequality data
 4. Interact with the map and markers to see detailed statistics
 5. Compare rates between different regions and conditions
 
