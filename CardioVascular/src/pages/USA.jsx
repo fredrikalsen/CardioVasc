@@ -16,6 +16,7 @@ function USA() {
     const [selectedState, setSelectedState] = useState('all');
     const [selectedCondition, setSelectedCondition] = useState('');
     const [conditionRate, setConditionRate] = useState(null);
+    const [discrepancyRate, setDiscrepancyRate] = useState(null);
     const chartRef = useRef(null);
 
     const usaBounds = [
@@ -107,80 +108,101 @@ function USA() {
         .domain([0, 60])
         .range(['#ffefd5', '#8b0000']);
 
-        const updateIncomeChart = (state, condition) => {
-            if (!state || !condition || state === 'all') {
-                if (chartRef.current) {
-                    chartRef.current.destroy();
-                    chartRef.current = null;
-                }
-                return;
-            }
-        
-            const stateIncomeData = incomeData.filter(item => item.State === state);
-        
-            if (stateIncomeData.length === 0) {
-                console.log(`No income data found for state: ${state}`);
-                return;
-            }
-        
-            const incomeCategories = ["<18000", "18-31000", "31-52000", "52-100000", ">100000"];
-            const chartData = incomeCategories.map(category => {
-                const row = stateIncomeData.find(item => item.Income === category);
-                return row && row[condition] ? parseFloat(row[condition]) : 0;
-            });
-        
-            const ctx = document.getElementById('incomeChart');
-        
+    const updateIncomeChart = (state, condition) => {
+        if (!state || !condition || state === 'all') {
             if (chartRef.current) {
                 chartRef.current.destroy();
+                chartRef.current = null;
             }
-        
-            chartRef.current = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: incomeCategories,
-                    datasets: [{
-                        label: ``,
-                        data: chartData,
-                        backgroundColor: '#BE0000',
-                    }]
-                },
-                options: {
-                    plugins: {
-                        legend: {
-                            display: false, // Hide the legend
+            return;
+        }
+
+        const stateIncomeData = incomeData.filter(item => item.State === state);
+
+        if (stateIncomeData.length === 0) {
+            console.log(`No income data found for state: ${state}`);
+            return;
+        }
+
+        const incomeCategories = ["<18000", "18-31000", "31-52000", "52-100000", ">100000"];
+        const chartData = incomeCategories.map(category => {
+            const row = stateIncomeData.find(item => item.Income === category);
+            return row && row[condition] ? parseFloat(row[condition]) : 0;
+        });
+
+        //Calculate discrepancy rate
+        const discRate1 = stateIncomeData
+            .filter(item => item.Income.trim() === "<18000")
+            .map(item => item[condition]); // Get an array of values
+
+        const discRate2 = stateIncomeData
+            .filter(item => item.Income.trim() === ">100000")
+            .map(item => item[condition]); // Get an array of values
+
+        // Extract first value from arrays safely
+        const rate1 = discRate1.length > 0 ? discRate1[0] : NaN;
+        const rate2 = discRate2.length > 0 ? discRate2[0] : NaN;
+
+        // Validate and calculate discrepancy rate
+        if (!isNaN(rate1) && !isNaN(rate2) && rate2 !== 0) {
+            setDiscrepancyRate(parseFloat(rate1) / parseFloat(rate2));
+        } else {
+            setDiscrepancyRate(NaN);
+            console.error("Invalid data: Cannot calculate discrepancy rate.");
+        }
+
+        const ctx = document.getElementById('incomeChart');
+
+        if (chartRef.current) {
+            chartRef.current.destroy();
+        }
+
+        chartRef.current = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: incomeCategories,
+                datasets: [{
+                    label: ``,
+                    data: chartData,
+                    backgroundColor: '#BE0000',
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: false, // Hide the legend
+                    },
+                    title: {
+                        display: true, // Display the chart title
+                        text: `Prevalence of ${condition} (%) by Income`, // Dynamic title
+                        font: {
+                            size: 11, // Adjust font size
+                            weight: '700', // Make the title bold
                         },
+                        padding: {
+                            top: 10, // Adjust padding to remove extra space
+                            bottom: 10,
+                        },
+                    },
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
                         title: {
-                            display: true, // Display the chart title
-                            text: `Prevalence of ${condition} (%) by Income`, // Dynamic title
-                            font: {
-                                size: 11, // Adjust font size
-                                weight: '700', // Make the title bold
-                            },
-                            padding: {
-                                top: 10, // Adjust padding to remove extra space
-                                bottom: 10,
-                            },
+                            display: true,
+                            text: 'Prevalence of Disease (%)',
                         },
                     },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Prevalence of Disease (%)',
-                            },
-                        },
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Income Bracket (£ Per Year)',
-                            },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Income Bracket (£ Per Year)',
                         },
                     },
                 },
-            });
-        };
+            },
+        });
+    };
 
     return (
         <div className="usa-container">
@@ -240,18 +262,33 @@ function USA() {
                                         <span className="rate-na">Data not available</span>
                                     )}
                                 </div>
-                                
+
                             </div>
-                            
+
                         )}
-{selectedState !== 'all' && selectedCondition && (
-    <div className="chart-container">
-        <canvas id="incomeChart" width="400" height="330"></canvas>
-    </div>
-)}
+                        {selectedState !== 'all' && selectedCondition && (
+                            <div className="chart-container">
+                                <canvas id="incomeChart" width="400" height="330"></canvas>
+                            </div>
+                        )}
+                        {/* Income Discrepancy Blurb */}
+                        {((selectedState !== 'all' && selectedCondition)) && (
+                            <div className="stats-card">
+                                <div className="rate-display">
+                                    {selectedCondition ? (
+                                        <>
+                                            <p>{selectedState === 'all'
+                                                ? `In the United Kingdom, people of the lowest income class are `
+                                                : `In ${selectedState}, people of the lowest income class are `}<span className="rate-value">{discrepancyRate.toFixed(1)}</span> times more likely to be diagnosed with {selectedCondition.toLowerCase()} than the highest income class.</p>
+                                        </>
+                                    ) : (
+                                        <span className="rate-na">Data not available</span>
+                                    )}
+                                </div>
+                            </div>)}
                     </div>
-                    
-                    
+
+
                 </div>
 
                 <div className="map-section">
