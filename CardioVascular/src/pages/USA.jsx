@@ -17,6 +17,9 @@ function USA() {
     const [selectedCondition, setSelectedCondition] = useState('');
     const [conditionRate, setConditionRate] = useState(null);
     const [discrepancyRate, setDiscrepancyRate] = useState(null);
+    const [GiniCoeff, setGiniCoeff] = useState(null);
+    const [GiniData, setGiniData] = useState(null);
+    const [sortedStates, setSortedStates] = useState(null);
     const chartRef = useRef(null);
 
     const usaBounds = [
@@ -28,9 +31,11 @@ function USA() {
         const fetchData = async () => {
             const heartResponse = await fetch('./data/heart_conditions_by_state_with_coordinates.csv');
             const incomeResponse = await fetch('./data/state_disease_income3.csv');
+            const giniResponse = await fetch('./data/giniusa.csv');
 
             const heartText = await heartResponse.text();
             const incomeText = await incomeResponse.text();
+            const giniText = await giniResponse.text();
 
             // Parse heart conditions data
             Papa.parse(heartText, {
@@ -43,6 +48,14 @@ function USA() {
                     }));
                     setData(parsedData);
                     setStates(['all', ...new Set(parsedData.map((item) => item.State))]);
+                    const allStates = Array.from(new Set(parsedData.map((item) => item.State)).add('Florida'))
+                        .filter((state) => state !== 'Puerto Rico' && state !== 'Guam' && state !== 'Virgin Islands')
+                        .sort();
+                    setSortedStates([
+                        ...allStates,
+                        'Guam',
+                        'Puerto Rico'
+                    ]);
                 },
             });
 
@@ -58,6 +71,14 @@ function USA() {
                     );
                     const uniqueConditions = [...new Set(diseaseColumns)];
                     setConditions(uniqueConditions);
+                },
+            });
+
+            // Parse gini data
+            Papa.parse(giniText, {
+                header: true,
+                complete: (result) => {
+                    setGiniData(result.data);
                 },
             });
         };
@@ -118,10 +139,22 @@ function USA() {
         }
 
         const stateIncomeData = incomeData.filter(item => item.State === state);
+        const giniChartData = GiniData.filter(item => parseFloat(item.State) === states.indexOf(selectedState)); // assuming insertion in alphabetical order
 
         if (stateIncomeData.length === 0) {
             console.log(`No income data found for state: ${state}`);
+            setGiniCoeff(null);
             return;
+        } else {
+            // if (condition === "angina") {
+            // }
+            // Angina not shown in US page
+            if (condition === "Heart Attack") {
+                setGiniCoeff(parseFloat(giniChartData[0].ginhat));
+            }
+            if (condition === "Stroke") {
+                setGiniCoeff(parseFloat(giniChartData[0].ginstr));
+            }
         }
 
         const incomeCategories = ["<18000", "18-31000", "31-52000", "52-100000", ">100000"];
@@ -286,6 +319,33 @@ function USA() {
                                     )}
                                 </div>
                             </div>)}
+
+                        {/* Gini Coefficient */}
+                        {((selectedState !== 'all' && GiniCoeff !== null &&
+                            (selectedCondition === "Angina" ||
+                                selectedCondition === "Stroke" ||
+                                selectedCondition === "Heart Attack"))) && (
+                                <div className="stats-card">
+                                    <h3>
+                                        {selectedState === 'all'
+                                            ? `United Kingdom Nationwide`
+                                            : `Gini Coefficient in ${selectedState} for ${selectedCondition}`}
+                                    </h3>
+                                    <div className="rate-display">
+                                        {GiniCoeff !== null ? (
+                                            <>
+                                                <span className="rate-unit">Gini Coefficient: </span>
+                                                <span className="rate-value">{GiniCoeff.toFixed(2)}</span>
+
+                                            </>
+                                        ) : selectedState === 'all' ? (
+                                            <span className="rate-na">Select a centre to view specific data</span>
+                                        ) : (
+                                            <span className="rate-na">Data not available</span>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
                     </div>
 
 
