@@ -19,7 +19,7 @@ function USA() {
     const [discrepancyRate, setDiscrepancyRate] = useState(null);
     const [GiniCoeff, setGiniCoeff] = useState(null);
     const [GiniData, setGiniData] = useState(null);
-    const [sortedStates, setSortedStates] = useState(null);
+    //const [sortedStates, setSortedStates] = useState(null);
     const chartRef = useRef(null);
 
     const usaBounds = [
@@ -31,7 +31,8 @@ function USA() {
         const fetchData = async () => {
             const heartResponse = await fetch('./data/heart_conditions_by_state_with_coordinates.csv');
             const incomeResponse = await fetch('./data/state_disease_income3.csv');
-            const giniResponse = await fetch('./data/giniusa.csv');
+            //const giniResponse = await fetch('./data/giniusa.csv');
+            const giniResponse = await fetch('./data/gus.csv');
 
             const heartText = await heartResponse.text();
             const incomeText = await incomeResponse.text();
@@ -48,14 +49,14 @@ function USA() {
                     }));
                     setData(parsedData);
                     setStates(['all', ...new Set(parsedData.map((item) => item.State))]);
-                    const allStates = Array.from(new Set(parsedData.map((item) => item.State)).add('Florida'))
-                        .filter((state) => state !== 'Puerto Rico' && state !== 'Guam' && state !== 'Virgin Islands')
-                        .sort();
-                    setSortedStates([
-                        ...allStates,
-                        'Guam',
-                        'Puerto Rico'
-                    ]);
+                    // const allStates = Array.from(new Set(parsedData.map((item) => item.State)).add('Florida'))
+                    //     .filter((state) => state !== 'Puerto Rico' && state !== 'Guam' && state !== 'Virgin Islands')
+                    //     .sort();
+                    // setSortedStates([
+                    //     ...allStates,
+                    //     'Guam',
+                    //     'Puerto Rico'
+                    // ]);
                 },
             });
 
@@ -139,7 +140,7 @@ function USA() {
         }
 
         const stateIncomeData = incomeData.filter(item => item.State === state);
-        const giniChartData = GiniData.filter(item => parseFloat(item.State) === states.indexOf(selectedState)); // assuming insertion in alphabetical order
+        const giniChartData = GiniData.filter(item => item.stnames === selectedState); // assuming insertion in alphabetical order
 
         if (stateIncomeData.length === 0) {
             console.log(`No income data found for state: ${state}`);
