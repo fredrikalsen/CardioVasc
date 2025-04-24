@@ -19,6 +19,7 @@ function USA() {
     const [discrepancyRate, setDiscrepancyRate] = useState(null);
     const [GiniCoeff, setGiniCoeff] = useState(null);
     const [GiniData, setGiniData] = useState(null);
+    //{Sorting only used for the file giniusa.csv, not gus.csv}
     //const [sortedStates, setSortedStates] = useState(null);
     const chartRef = useRef(null);
 
@@ -49,6 +50,7 @@ function USA() {
                     }));
                     setData(parsedData);
                     setStates(['all', ...new Set(parsedData.map((item) => item.State))]);
+                    //{Sorting only used for the file giniusa.csv, not gus.csv}
                     // const allStates = Array.from(new Set(parsedData.map((item) => item.State)).add('Florida'))
                     //     .filter((state) => state !== 'Puerto Rico' && state !== 'Guam' && state !== 'Virgin Islands')
                     //     .sort();
