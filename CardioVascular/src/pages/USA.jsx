@@ -49,7 +49,7 @@ function USA() {
                         Longitude: parseFloat(item.Longitude),
                     }));
                     setData(parsedData);
-                    setStates(['all', ...new Set(parsedData.map((item) => item.State))]);
+                    setStates(['all', ...new Set(parsedData.map((item) => item.State))].filter(item => item !== ""));
                     //{Sorting only used for the file giniusa.csv, not gus.csv}
                     // const allStates = Array.from(new Set(parsedData.map((item) => item.State)).add('Florida'))
                     //     .filter((state) => state !== 'Puerto Rico' && state !== 'Guam' && state !== 'Virgin Islands')

@@ -53,9 +53,11 @@ function UK() {
           }));
           setData(parsedData);
           // Get unique centres while preserving order
-          const uniqueCentres = [...new Set(parsedData.map(item => item.assessment_centre))];
+          const uniqueCentres = [...new Set(parsedData.map(item => item.assessment_centre))].filter(item => item !== "");
           setCentres(['all', ...uniqueCentres]);
-          setIllnesses([...new Set(parsedData.map((item) => item.illness))]);
+          const uniqueIllnesses = [...new Set(parsedData.map((item) => item.illness))].filter(item => item !== undefined);
+          console.log(uniqueIllnesses);
+          setIllnesses(uniqueIllnesses);
         },
       });
     };
@@ -96,7 +98,7 @@ function UK() {
           if (prevIllnesses.includes("stroke")) return prevIllnesses;
           const newIllness = "stroke";
           const indexToInsert = prevIllnesses.length > 0 ? prevIllnesses.length - 1 : 0;
-          const updatedIllnesses = [...prevIllnesses];
+          const updatedIllnesses = [...prevIllnesses].filter(item => item !== undefined);
           updatedIllnesses.splice(indexToInsert, 0, newIllness);
           return updatedIllnesses;
         });
@@ -136,7 +138,7 @@ function UK() {
           setDiscrepancyRate(parseFloat(rate1) / parseFloat(rate2));
         } else {
           setDiscrepancyRate(NaN);
-          console.error("Invalid data: Cannot calculate discrepancy rate.");
+          //console.error("Invalid data: Cannot calculate discrepancy rate.");
         }
 
 
@@ -214,7 +216,7 @@ function UK() {
           if (prevIllnesses.includes("stroke")) return prevIllnesses;
           const newIllness = "stroke";
           const indexToInsert = prevIllnesses.length > 0 ? prevIllnesses.length - 1 : 0;
-          const updatedIllnesses = [...prevIllnesses];
+          const updatedIllnesses = [...prevIllnesses].filter(item => item !== undefined);
           updatedIllnesses.splice(indexToInsert, 0, newIllness);
           return updatedIllnesses;
         });
