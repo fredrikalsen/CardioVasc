@@ -350,25 +350,39 @@ svg {
 }
 
 .year-filter {
+    padding: 7px 7px;
+    margin: 3px 1px;
     position: absolute;
     right: 10px;
-    top: 17px;
-    border-radius: 5px;
+    top: 10px;
+    border-radius: 1px;
+    border: 10px solid whitesmoke;
     background-color: whitesmoke;
 
 }
 
-.year-filter input {
+.year-filter input[type="range"] {
+    accent-color: #be0000;
+}
+
+.slider-label {
+    margin-bottom: 15px;
+    display: block;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* .year-filter input {
     padding: 18px 7px;
     font-size: 1rem;
     border: 1px solid #ccc;
     width: 219px;
     margin: 3px 1px;
-}
-
+} */
+/* 
 #fa-magnifying-glass {
     margin: 3px 7px;
-}
+} */
 
 .min-rate {
     fill: yellow !important;
