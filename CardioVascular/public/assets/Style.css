@@ -4,6 +4,8 @@
     --lightgray: #686D76;
     --darkgray: #373A40;
     --green: #be0000;
+    --selectedMin: #ff8f8f;
+    --selectedMax: #620505;
     --white: #EEEEEE;
 }
 
@@ -408,6 +410,37 @@ svg {
     max-width: 300px;
     left: 20px;
     bottom: 20px;
+}
+
+.gradient-legend2 {
+    padding: 7px 7px;
+    margin: 3px 1px;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    /* width: 250px;
+    left: 5px;
+    bottom: 3px; */
+    border-radius: 1px;
+    border: 10px solid whitesmoke;
+    background-color: whitesmoke;
+    z-index: 1000;
+}
+
+.legend-labels {
+    display: flex;
+    flex-direction: column;
+    /* this is key */
+    gap: 4px;
+    /* optional spacing */
+}
+
+.min-label {
+    color: var(--selectedMin);
+}
+
+.max-label {
+    color: var(--selectedMax);
 }
 
 .legend-title {
