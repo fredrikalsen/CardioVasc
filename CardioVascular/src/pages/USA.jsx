@@ -19,6 +19,11 @@ function USA() {
     const [discrepancyRate, setDiscrepancyRate] = useState(null);
     const [GiniCoeff, setGiniCoeff] = useState(null);
     const [GiniData, setGiniData] = useState(null);
+    const [minRate, setMinRate] = useState(null);
+    const [maxRate, setMaxRate] = useState(null);
+    const selectedConditionCapitalized = selectedCondition.charAt(0).toUpperCase() + selectedCondition.slice(1);
+    const [globalMinState, setGlobalMinState] = useState(null);
+    const [globalMaxState, setGlobalMaxState] = useState(null);
     //{Sorting only used for the file giniusa.csv, not gus.csv}
     //const [sortedStates, setSortedStates] = useState(null);
     const chartRef = useRef(null);
@@ -119,6 +124,17 @@ function USA() {
                 return;
             }
             const total = validEntries.reduce((sum, item) => sum + parseFloat(item[condition]), 0);
+            const minRate = Math.min(...validEntries.map(d => d[condition]));
+            const maxRate = Math.max(...validEntries.map(d => d[condition]));
+            setMinRate(minRate);
+            setMaxRate(maxRate);
+            const globalMinState = validEntries.filter(state =>
+                parseFloat(state[condition]) === minRate);
+
+            const globalMaxState = validEntries.filter(state =>
+                parseFloat(state[condition]) === maxRate);
+            setGlobalMinState(globalMinState);
+            setGlobalMaxState(globalMaxState);
             setConditionRate(total / validEntries.length);
         } else if (state && condition) {
             const selectedData = data.find((item) => item.State === state);
@@ -165,7 +181,6 @@ function USA() {
             const row = stateIncomeData.find(item => item.Income === category);
             return row && row[condition] ? parseFloat(row[condition]) : 0;
         });
-
         //Calculate discrepancy rate
         const discRate1 = stateIncomeData
             .filter(item => item.Income.trim() === "<18000")
@@ -314,8 +329,8 @@ function USA() {
                                     {selectedCondition ? (
                                         <>
                                             <p>{selectedState === 'all'
-                                                ? `In the United Kingdom, people of the lowest income class are `
-                                                : `In ${selectedState}, people of the lowest income class are `}<span className="rate-value">{discrepancyRate.toFixed(1)}</span> times more likely to be diagnosed with {selectedCondition.toLowerCase()} than the highest income class.</p>
+                                                ? `In the United States, people of the lowest income class are `
+                                                : `In ${selectedState}, people of the lowest income class are `}<span className="rate-value">{discrepancyRate && discrepancyRate.toFixed(1)}</span> times more likely to be diagnosed with {selectedCondition.toLowerCase()} than the highest income class.</p>
                                         </>
                                     ) : (
                                         <span className="rate-na">Data not available</span>
@@ -324,7 +339,7 @@ function USA() {
                             </div>)}
 
                         {/* Gini Coefficient */}
-                        {((selectedState !== 'all' && GiniCoeff !== null &&
+                        {((selectedState !== 'all' && GiniCoeff &&
                             (selectedCondition === "Angina" ||
                                 selectedCondition === "Stroke" ||
                                 selectedCondition === "Heart Attack"))) && (
@@ -368,6 +383,15 @@ function USA() {
                             url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
                             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                         />
+                        {selectedState === 'all' && selectedCondition &&
+                            <div className="gradient-legend2">
+                                <div className="legend-title">Legend</div>
+                                <div className="legend-labels">
+                                    <div className="min-label">Minimum Rate for {selectedConditionCapitalized}</div>
+                                    <div className="max-label">Maximum Rate for {selectedConditionCapitalized}</div>
+                                </div>
+                            </div>
+                        }
 
                         {data
                             .filter((state) =>
@@ -376,7 +400,10 @@ function USA() {
                                 (selectedCondition === '' || state[selectedCondition] !== undefined)
                             )
                             .map((state, index) => {
-                                const isSelected = state.State === selectedState;
+                                const isMin = selectedState === "all" && (globalMinState && state.State === globalMinState[0].State)
+                                const isMax = selectedState === "all" && (globalMaxState && state.State === globalMaxState[0].State)
+                                const isMinMax = isMin || isMax;
+                                const isSelected = (state.State === selectedState) || isMinMax;
                                 const conditionRate = selectedCondition ? parseFloat(state[selectedCondition]) : null;
 
                                 return (
@@ -385,7 +412,7 @@ function USA() {
                                         center={[state.Latitude, state.Longitude]}
                                         radius={isSelected ? 12 : 8}
                                         pathOptions={{
-                                            fillColor: isSelected ? 'var(--green)' : 'var(--lightgray)',
+                                            fillColor: isSelected ? isMin ? 'var(--selectedMin)' : isMax ? 'var(--selectedMax)' : 'var(--green)' : 'var(--lightgray)',
                                             color: isSelected ? '#333' : '#eee',
                                             weight: isSelected ? 2 : 1,
                                             opacity: 0.3,
