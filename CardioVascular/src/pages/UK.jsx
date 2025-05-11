@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, CircleMarker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import Papa from 'papaparse';
@@ -22,6 +22,10 @@ function UK() {
   const [discrepancyRate, setDiscrepancyRate] = useState(null);
   const [selectedMarker, setSelectedMarker] = useState(null);
   const selectedIllnessCapitalized = selectedIllness.charAt(0).toUpperCase() + selectedIllness.slice(1);
+  const [minRate, setMinRate] = useState(null);
+  const [maxRate, setMaxRate] = useState(null);
+  const [globalMinCity, setGlobalMinCity] = useState(null);
+  const [globalMaxCity, setGlobalMaxCity] = useState(null);
 
   const ukBounds = [
     [49.8, -8.0],
@@ -53,9 +57,11 @@ function UK() {
           }));
           setData(parsedData);
           // Get unique centres while preserving order
-          const uniqueCentres = [...new Set(parsedData.map(item => item.assessment_centre))];
+          const uniqueCentres = [...new Set(parsedData.map(item => item.assessment_centre))].filter(item => item !== "");
           setCentres(['all', ...uniqueCentres]);
-          setIllnesses([...new Set(parsedData.map((item) => item.illness))]);
+          const uniqueIllnesses = [...new Set(parsedData.map((item) => item.illness))].filter(item => item !== undefined);
+          //(uniqueIllnesses);
+          setIllnesses(uniqueIllnesses);
         },
       });
     };
@@ -96,13 +102,13 @@ function UK() {
           if (prevIllnesses.includes("stroke")) return prevIllnesses;
           const newIllness = "stroke";
           const indexToInsert = prevIllnesses.length > 0 ? prevIllnesses.length - 1 : 0;
-          const updatedIllnesses = [...prevIllnesses];
+          const updatedIllnesses = [...prevIllnesses].filter(item => item !== undefined);
           updatedIllnesses.splice(indexToInsert, 0, newIllness);
           return updatedIllnesses;
         });
 
         // Extract income data from the CSV and filter out empty values
-        console.log(selectedIllness);
+        //console.log(selectedIllness);
         const incomes = result.data.filter(item => item[' "Illness"'].trim() === selectedIllness).map(item => item[' "Income"']).filter(Boolean);
 
         // Extract percentage data from the CSV and filter out empty values
@@ -136,7 +142,7 @@ function UK() {
           setDiscrepancyRate(parseFloat(rate1) / parseFloat(rate2));
         } else {
           setDiscrepancyRate(NaN);
-          console.error("Invalid data: Cannot calculate discrepancy rate.");
+          //console.error("Invalid data: Cannot calculate discrepancy rate.");
         }
 
 
@@ -214,7 +220,7 @@ function UK() {
           if (prevIllnesses.includes("stroke")) return prevIllnesses;
           const newIllness = "stroke";
           const indexToInsert = prevIllnesses.length > 0 ? prevIllnesses.length - 1 : 0;
-          const updatedIllnesses = [...prevIllnesses];
+          const updatedIllnesses = [...prevIllnesses].filter(item => item !== undefined);
           updatedIllnesses.splice(indexToInsert, 0, newIllness);
           return updatedIllnesses;
         });
@@ -317,6 +323,8 @@ function UK() {
   const handleCentreChange = (event) => {
     const centre = event.target.value;
     setSelectedCentre(centre);
+    setSelectedMarker(centre);
+    //console.log(centre)
     updateIllnessRate(centre, selectedIllness);
   };
 
@@ -329,6 +337,7 @@ function UK() {
 
   const handleMarkerClick = (centreName) => {
     setSelectedCentre(centreName);
+    //console.log(centreName)
     setSelectedMarker(centreName);  // This is the key change
     if (selectedIllness) updateIllnessRate(centreName, selectedIllness);
   };
@@ -348,6 +357,19 @@ function UK() {
       }
 
       const total = validEntries.reduce((sum, item) => sum + item.illness_rate, 0);
+      const minRate = Math.min(...validEntries.map(d => d.illness_rate));
+      const maxRate = Math.max(...validEntries.map(d => d.illness_rate));
+      setMinRate(minRate);
+      setMaxRate(maxRate);
+      const globalMinCity = validEntries.filter(city =>
+        city.illness_rate === minRate);
+
+      const globalMaxCity = validEntries.filter(city =>
+        city.illness_rate === maxRate);
+
+      setGlobalMinCity(globalMinCity);
+      setGlobalMaxCity(globalMaxCity);
+
       setIllnessRate(total / validEntries.length);
     } else if (centre && illness) {
       const selectedData = data.find(
@@ -527,6 +549,15 @@ function UK() {
               url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             />
+            {selectedCentre === 'all' && selectedIllness &&
+              <div className="gradient-legend2">
+                <div className="legend-title">Legend</div>
+                <div className="legend-labels2">
+                  <div className="min-label">Minimum Rate for {selectedIllnessCapitalized}</div>
+                  <div className="max-label">Maximum Rate for {selectedIllnessCapitalized}</div>
+                </div>
+              </div>
+            }
 
             {/* Map markers */}
             {data
@@ -537,7 +568,10 @@ function UK() {
                   (selectedIllness === '' || centre.illness === selectedIllness)
               )
               .map((centre, index) => {
-                const isSelected = centre.assessment_centre === selectedMarker;
+                const isMin = selectedCentre === "all" && (globalMinCity && centre.assessment_centre === globalMinCity[0].assessment_centre)
+                const isMax = selectedCentre === "all" && (globalMaxCity && centre.assessment_centre === globalMaxCity[0].assessment_centre)
+                const isMinMax = isMin || isMax
+                const isSelected = (centre.assessment_centre === selectedMarker) || isMinMax;
                 const illnessRate = selectedIllness ? parseFloat(centre.illness_rate) : null;
 
                 return (
@@ -546,7 +580,7 @@ function UK() {
                     center={[centre.latitude, centre.longitude]}
                     radius={isSelected ? 12 : 8}
                     pathOptions={{
-                      fillColor: isSelected ? 'var(--green)' : 'var(--lightgray)',
+                      fillColor: isSelected ? isMin ? 'var(--selectedMin)' : isMax ? 'var(--selectedMax)' : 'var(--green)' : 'var(--lightgray)',
                       color: isSelected ? '#333' : '#eee',
                       weight: isSelected ? 2 : 1,
                       opacity: 0.3,

@@ -16,6 +16,16 @@ function USA() {
     const [selectedState, setSelectedState] = useState('all');
     const [selectedCondition, setSelectedCondition] = useState('');
     const [conditionRate, setConditionRate] = useState(null);
+    const [discrepancyRate, setDiscrepancyRate] = useState(null);
+    const [GiniCoeff, setGiniCoeff] = useState(null);
+    const [GiniData, setGiniData] = useState(null);
+    const [minRate, setMinRate] = useState(null);
+    const [maxRate, setMaxRate] = useState(null);
+    const selectedConditionCapitalized = selectedCondition.charAt(0).toUpperCase() + selectedCondition.slice(1);
+    const [globalMinState, setGlobalMinState] = useState(null);
+    const [globalMaxState, setGlobalMaxState] = useState(null);
+    //{Sorting only used for the file giniusa.csv, not gus.csv}
+    //const [sortedStates, setSortedStates] = useState(null);
     const chartRef = useRef(null);
 
     const usaBounds = [
@@ -27,9 +37,12 @@ function USA() {
         const fetchData = async () => {
             const heartResponse = await fetch('./data/heart_conditions_by_state_with_coordinates.csv');
             const incomeResponse = await fetch('./data/state_disease_income3.csv');
+            //const giniResponse = await fetch('./data/giniusa.csv');
+            const giniResponse = await fetch('./data/gus.csv');
 
             const heartText = await heartResponse.text();
             const incomeText = await incomeResponse.text();
+            const giniText = await giniResponse.text();
 
             // Parse heart conditions data
             Papa.parse(heartText, {
@@ -41,7 +54,16 @@ function USA() {
                         Longitude: parseFloat(item.Longitude),
                     }));
                     setData(parsedData);
-                    setStates(['all', ...new Set(parsedData.map((item) => item.State))]);
+                    setStates(['all', ...new Set(parsedData.map((item) => item.State))].filter(item => item !== ""));
+                    //{Sorting only used for the file giniusa.csv, not gus.csv}
+                    // const allStates = Array.from(new Set(parsedData.map((item) => item.State)).add('Florida'))
+                    //     .filter((state) => state !== 'Puerto Rico' && state !== 'Guam' && state !== 'Virgin Islands')
+                    //     .sort();
+                    // setSortedStates([
+                    //     ...allStates,
+                    //     'Guam',
+                    //     'Puerto Rico'
+                    // ]);
                 },
             });
 
@@ -57,6 +79,14 @@ function USA() {
                     );
                     const uniqueConditions = [...new Set(diseaseColumns)];
                     setConditions(uniqueConditions);
+                },
+            });
+
+            // Parse gini data
+            Papa.parse(giniText, {
+                header: true,
+                complete: (result) => {
+                    setGiniData(result.data);
                 },
             });
         };
@@ -94,6 +124,17 @@ function USA() {
                 return;
             }
             const total = validEntries.reduce((sum, item) => sum + parseFloat(item[condition]), 0);
+            const minRate = Math.min(...validEntries.map(d => d[condition]));
+            const maxRate = Math.max(...validEntries.map(d => d[condition]));
+            setMinRate(minRate);
+            setMaxRate(maxRate);
+            const globalMinState = validEntries.filter(state =>
+                parseFloat(state[condition]) === minRate);
+
+            const globalMaxState = validEntries.filter(state =>
+                parseFloat(state[condition]) === maxRate);
+            setGlobalMinState(globalMinState);
+            setGlobalMaxState(globalMaxState);
             setConditionRate(total / validEntries.length);
         } else if (state && condition) {
             const selectedData = data.find((item) => item.State === state);
@@ -107,80 +148,112 @@ function USA() {
         .domain([0, 60])
         .range(['#ffefd5', '#8b0000']);
 
-        const updateIncomeChart = (state, condition) => {
-            if (!state || !condition || state === 'all') {
-                if (chartRef.current) {
-                    chartRef.current.destroy();
-                    chartRef.current = null;
-                }
-                return;
-            }
-        
-            const stateIncomeData = incomeData.filter(item => item.State === state);
-        
-            if (stateIncomeData.length === 0) {
-                console.log(`No income data found for state: ${state}`);
-                return;
-            }
-        
-            const incomeCategories = ["<18000", "18-31000", "31-52000", "52-100000", ">100000"];
-            const chartData = incomeCategories.map(category => {
-                const row = stateIncomeData.find(item => item.Income === category);
-                return row && row[condition] ? parseFloat(row[condition]) : 0;
-            });
-        
-            const ctx = document.getElementById('incomeChart');
-        
+    const updateIncomeChart = (state, condition) => {
+        if (!state || !condition || state === 'all') {
             if (chartRef.current) {
                 chartRef.current.destroy();
+                chartRef.current = null;
             }
-        
-            chartRef.current = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: incomeCategories,
-                    datasets: [{
-                        label: ``,
-                        data: chartData,
-                        backgroundColor: '#BE0000',
-                    }]
-                },
-                options: {
-                    plugins: {
-                        legend: {
-                            display: false, // Hide the legend
+            return;
+        }
+
+        const stateIncomeData = incomeData.filter(item => item.State === state);
+        const giniChartData = GiniData.filter(item => item.stnames === selectedState); // assuming insertion in alphabetical order
+
+        if (stateIncomeData.length === 0) {
+            console.log(`No income data found for state: ${state}`);
+            setGiniCoeff(null);
+            return;
+        } else {
+            // if (condition === "angina") {
+            // }
+            // Angina not shown in US page
+            if (condition === "Heart Attack") {
+                setGiniCoeff(parseFloat(giniChartData[0].ginhat));
+            }
+            if (condition === "Stroke") {
+                setGiniCoeff(parseFloat(giniChartData[0].ginstr));
+            }
+        }
+
+        const incomeCategories = ["<18000", "18-31000", "31-52000", "52-100000", ">100000"];
+        const chartData = incomeCategories.map(category => {
+            const row = stateIncomeData.find(item => item.Income === category);
+            return row && row[condition] ? parseFloat(row[condition]) : 0;
+        });
+        //Calculate discrepancy rate
+        const discRate1 = stateIncomeData
+            .filter(item => item.Income.trim() === "<18000")
+            .map(item => item[condition]); // Get an array of values
+
+        const discRate2 = stateIncomeData
+            .filter(item => item.Income.trim() === ">100000")
+            .map(item => item[condition]); // Get an array of values
+
+        // Extract first value from arrays safely
+        const rate1 = discRate1.length > 0 ? discRate1[0] : NaN;
+        const rate2 = discRate2.length > 0 ? discRate2[0] : NaN;
+
+        // Validate and calculate discrepancy rate
+        if (!isNaN(rate1) && !isNaN(rate2) && rate2 !== 0) {
+            setDiscrepancyRate(parseFloat(rate1) / parseFloat(rate2));
+        } else {
+            setDiscrepancyRate(NaN);
+            console.error("Invalid data: Cannot calculate discrepancy rate.");
+        }
+
+        const ctx = document.getElementById('incomeChart');
+
+        if (chartRef.current) {
+            chartRef.current.destroy();
+        }
+
+        chartRef.current = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: incomeCategories,
+                datasets: [{
+                    label: ``,
+                    data: chartData,
+                    backgroundColor: '#BE0000',
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: false, // Hide the legend
+                    },
+                    title: {
+                        display: true, // Display the chart title
+                        text: `Prevalence of ${condition} (%) by Income`, // Dynamic title
+                        font: {
+                            size: 11, // Adjust font size
+                            weight: '700', // Make the title bold
                         },
+                        padding: {
+                            top: 10, // Adjust padding to remove extra space
+                            bottom: 10,
+                        },
+                    },
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
                         title: {
-                            display: true, // Display the chart title
-                            text: `Prevalence of ${condition} (%) by Income`, // Dynamic title
-                            font: {
-                                size: 11, // Adjust font size
-                                weight: '700', // Make the title bold
-                            },
-                            padding: {
-                                top: 10, // Adjust padding to remove extra space
-                                bottom: 10,
-                            },
+                            display: true,
+                            text: 'Prevalence of Disease (%)',
                         },
                     },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Prevalence of Disease (%)',
-                            },
-                        },
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Income Bracket (£ Per Year)',
-                            },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Income Bracket (£ Per Year)',
                         },
                     },
                 },
-            });
-        };
+            },
+        });
+    };
 
     return (
         <div className="usa-container">
@@ -240,18 +313,60 @@ function USA() {
                                         <span className="rate-na">Data not available</span>
                                     )}
                                 </div>
-                                
+
                             </div>
-                            
+
                         )}
-{selectedState !== 'all' && selectedCondition && (
-    <div className="chart-container">
-        <canvas id="incomeChart" width="400" height="330"></canvas>
-    </div>
-)}
+                        {selectedState !== 'all' && selectedCondition && (
+                            <div className="chart-container">
+                                <canvas id="incomeChart" width="400" height="330"></canvas>
+                            </div>
+                        )}
+                        {/* Income Discrepancy Blurb */}
+                        {((selectedState !== 'all' && selectedCondition)) && (
+                            <div className="stats-card">
+                                <div className="rate-display">
+                                    {selectedCondition ? (
+                                        <>
+                                            <p>{selectedState === 'all'
+                                                ? `In the United States, people of the lowest income class are `
+                                                : `In ${selectedState}, people of the lowest income class are `}<span className="rate-value">{discrepancyRate && discrepancyRate.toFixed(1)}</span> times more likely to be diagnosed with {selectedCondition.toLowerCase()} than the highest income class.</p>
+                                        </>
+                                    ) : (
+                                        <span className="rate-na">Data not available</span>
+                                    )}
+                                </div>
+                            </div>)}
+
+                        {/* Gini Coefficient */}
+                        {((selectedState !== 'all' && GiniCoeff &&
+                            (selectedCondition === "Angina" ||
+                                selectedCondition === "Stroke" ||
+                                selectedCondition === "Heart Attack"))) && (
+                                <div className="stats-card">
+                                    <h3>
+                                        {selectedState === 'all'
+                                            ? `United Kingdom Nationwide`
+                                            : `Gini Coefficient in ${selectedState} for ${selectedCondition}`}
+                                    </h3>
+                                    <div className="rate-display">
+                                        {GiniCoeff !== null ? (
+                                            <>
+                                                <span className="rate-unit">Gini Coefficient: </span>
+                                                <span className="rate-value">{GiniCoeff.toFixed(2)}</span>
+
+                                            </>
+                                        ) : selectedState === 'all' ? (
+                                            <span className="rate-na">Select a centre to view specific data</span>
+                                        ) : (
+                                            <span className="rate-na">Data not available</span>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
                     </div>
-                    
-                    
+
+
                 </div>
 
                 <div className="map-section">
@@ -268,6 +383,15 @@ function USA() {
                             url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
                             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                         />
+                        {selectedState === 'all' && selectedCondition &&
+                            <div className="gradient-legend2">
+                                <div className="legend-title">Legend</div>
+                                <div className="legend-labels2">
+                                    <div className="min-label">Minimum Rate for {selectedConditionCapitalized}</div>
+                                    <div className="max-label">Maximum Rate for {selectedConditionCapitalized}</div>
+                                </div>
+                            </div>
+                        }
 
                         {data
                             .filter((state) =>
@@ -276,7 +400,10 @@ function USA() {
                                 (selectedCondition === '' || state[selectedCondition] !== undefined)
                             )
                             .map((state, index) => {
-                                const isSelected = state.State === selectedState;
+                                const isMin = selectedState === "all" && (globalMinState && state.State === globalMinState[0].State)
+                                const isMax = selectedState === "all" && (globalMaxState && state.State === globalMaxState[0].State)
+                                const isMinMax = isMin || isMax;
+                                const isSelected = (state.State === selectedState) || isMinMax;
                                 const conditionRate = selectedCondition ? parseFloat(state[selectedCondition]) : null;
 
                                 return (
@@ -285,7 +412,7 @@ function USA() {
                                         center={[state.Latitude, state.Longitude]}
                                         radius={isSelected ? 12 : 8}
                                         pathOptions={{
-                                            fillColor: isSelected ? 'var(--green)' : 'var(--lightgray)',
+                                            fillColor: isSelected ? isMin ? 'var(--selectedMin)' : isMax ? 'var(--selectedMax)' : 'var(--green)' : 'var(--lightgray)',
                                             color: isSelected ? '#333' : '#eee',
                                             weight: isSelected ? 2 : 1,
                                             opacity: 0.3,

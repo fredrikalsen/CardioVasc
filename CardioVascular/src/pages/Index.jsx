@@ -927,8 +927,8 @@ function Index() {
                 {/* Map container */}
                 <div className="map">
                     {/* Right Search (World Map Filter) */}
-                    <div className="year-filter">
-                        <input
+                    {/* <div className="year-filter"> */}
+                    {/* <input
                             id="input-box"
                             type="text"
                             placeholder="Enter a year (1990-2021)"
@@ -940,12 +940,27 @@ function Index() {
                                 }
                             }}
                             onFocus={() => setSelectedYearRight("")} // Clear previous selection on focus
-                        />
+                        /> */}
 
-                        {/* Search button for the right search */}
-                        <button onClick={handleYearFilterRight} className="magni-button">
+                    {/* Search button for the right search */}
+                    {/* <button onClick={handleYearFilterRight} className="magni-button">
                             <i id="fa-magnifying-glass" className="fa-solid fa-magnifying-glass"></i>
-                        </button>
+                        </button> */}
+                    {/* </div> */}
+                    <div className="year-filter">
+                        <label htmlFor="year-slider" className="slider-label">
+                            Year: {inputYearRight}
+                        </label>
+                        <input
+                            id="year-slider"
+                            type="range"
+                            min="1990"
+                            max="2021"
+                            step="1"
+                            value={inputYearRight}
+                            onChange={(e) => setInputYearRight(e.target.value)}
+                            onMouseUp={handleYearFilterRight} // trigger on release
+                        />
                     </div>
                     {/* Gradient Scale Legend */}
                     {showGradientScale && (
