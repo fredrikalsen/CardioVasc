@@ -386,7 +386,7 @@ function USA() {
                         {selectedState === 'all' && selectedCondition &&
                             <div className="gradient-legend2">
                                 <div className="legend-title">Legend</div>
-                                <div className="legend-labels">
+                                <div className="legend-labels2">
                                     <div className="min-label">Minimum Rate for {selectedConditionCapitalized}</div>
                                     <div className="max-label">Maximum Rate for {selectedConditionCapitalized}</div>
                                 </div>

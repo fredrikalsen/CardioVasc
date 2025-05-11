@@ -427,7 +427,7 @@ svg {
     z-index: 1000;
 }
 
-.legend-labels {
+.legend-labels2 {
     display: flex;
     flex-direction: column;
     /* this is key */

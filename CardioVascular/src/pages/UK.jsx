@@ -552,7 +552,7 @@ function UK() {
             {selectedCentre === 'all' && selectedIllness &&
               <div className="gradient-legend2">
                 <div className="legend-title">Legend</div>
-                <div className="legend-labels">
+                <div className="legend-labels2">
                   <div className="min-label">Minimum Rate for {selectedIllnessCapitalized}</div>
                   <div className="max-label">Maximum Rate for {selectedIllnessCapitalized}</div>
                 </div>
