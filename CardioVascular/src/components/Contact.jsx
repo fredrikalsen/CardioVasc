@@ -7,6 +7,18 @@ import { faMapMarkerAlt, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { faLinkedin } from '@fortawesome/free-brands-svg-icons';
 
 function Contact() {
+
+  //removing leftover tooltips from world map
+  const existingMinTooltip = document.getElementById("min-tooltip");
+  if (existingMinTooltip) {
+    existingMinTooltip.remove();
+  }
+
+  const existingMaxTooltip = document.getElementById("max-tooltip");
+  if (existingMaxTooltip) {
+    existingMaxTooltip.remove();
+  }
+
   return (
     <>
       <Header />
@@ -14,7 +26,7 @@ function Contact() {
         <section className="contact-container">
           <h2>Contact Us</h2>
           <h3>Get in Touch</h3>
-          
+
           <div className="contact-info">
             <FontAwesomeIcon icon={faMapMarkerAlt} />
             <p>
@@ -36,9 +48,9 @@ function Contact() {
           <div className="contact-info">
             <FontAwesomeIcon icon={faLinkedin} />
             <p>
-              <a 
-                href="https://www.linkedin.com/company/nightingale-project" 
-                target="_blank" 
+              <a
+                href="https://www.linkedin.com/company/nightingale-project"
+                target="_blank"
                 rel="noopener noreferrer"
               >
                 Connect on LinkedIn

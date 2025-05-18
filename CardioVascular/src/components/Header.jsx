@@ -9,25 +9,25 @@ function Header() {
     };
 
     const getPageTitle = () => {
-        switch(location.pathname) {
+        switch (location.pathname) {
             case '/':
                 return (
                     <>
-                        <span className="title-main">Prevalence Rate of Cardiovascular Diseases Global</span>
+                        <span className="title-main">Cardiovascular Diseases: Global</span>
                         <span className="title-highlight"></span>
                     </>
                 );
             case '/uk':
                 return (
                     <>
-                        <span className="title-main">Prevalence Rate of Cardiovascular Diseases in the UK</span>
+                        <span className="title-main">Cardiovascular Diseases: UK</span>
                         <span className="title-highlight"></span>
                     </>
                 );
             case '/usa':
                 return (
                     <>
-                        <span className="title-main">Prevalence Rate of Cardiovascular Diseases in the USA</span>
+                        <span className="title-main">Cardiovascular Diseases: USA</span>
                         <span className="title-highlight"></span>
                     </>
                 );
@@ -45,7 +45,7 @@ function Header() {
                     CardioVascularView
                 </button>
             </div>
-            
+
             <div className="title-container">
                 <h2 className="main-title">
                     {getPageTitle()}
@@ -73,6 +73,11 @@ function Header() {
                         <li className="menu-item">
                             <NavLink to="/about" className="menu-link" activeClassName="active">
                                 About
+                            </NavLink>
+                        </li>
+                        <li className="menu-item">
+                            <NavLink to="/contact" className="menu-link" activeClassName="active">
+                                Contact
                             </NavLink>
                         </li>
                     </ul>

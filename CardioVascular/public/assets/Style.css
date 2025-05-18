@@ -430,9 +430,9 @@ svg {
 .legend-labels2 {
     display: flex;
     flex-direction: column;
-    /* this is key */
     gap: 4px;
-    /* optional spacing */
+    font-weight: bold;
+    font-size: 14px;
 }
 
 .min-label {
@@ -446,7 +446,7 @@ svg {
 .legend-title {
     font-weight: bold;
     margin-bottom: 8px;
-    font-size: 14px;
+    font-size: 16px;
 }
 
 .gradient-bar {
