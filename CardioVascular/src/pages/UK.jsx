@@ -42,6 +42,30 @@ function UK() {
     existingMaxTooltip.remove();
   }
 
+  //This component is used instead of Bar so that we can ensure the dimensions of 
+  //the box that the responsive tag relies on are set before we instantiate the bar chart
+  const ResponsiveBarChart = ({ data, options }) => {
+    const chartRef = useRef(null);
+
+    useEffect(() => {
+      if (chartRef.current) {
+        setTimeout(() => chartRef.current.resize(), 0);
+      }
+    }, [data, options]);
+
+    return (
+      <Bar
+        ref={(el) => {
+          if (el && el.chart) {
+            chartRef.current = el.chart;
+          }
+        }}
+        data={data}
+        options={options}
+      />
+    );
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch('./data/heart_disease_rates.csv');
@@ -74,250 +98,171 @@ function UK() {
     // You can add any additional logic here if needed
   }, [selectedCentre]);
 
+  // useEffect/async prevents the download of the chart data, which slows down the application
+  useEffect(() => {
+    const fetchIncomeData = async () => {
+      const selectedCsvPath = selectedCentre === "all"
+        ? "./data/all.csv"
+        : "./data/giniandprev.csv";
 
-  // Retrieve income data
-  const csvFile = selectedCentre === "all" ? require('../income_CSV/all.csv') : require('../income_CSV/giniandprev.csv');
-  // Using Papa Parse to parse the CSV file
-  if (selectedCentre === "all") {
-    Papa.parse(csvFile, {
-      download: true,  // Downloads the CSV file
-      header: true,  // Treats the first row as the header
-      dynamicTyping: true,  // Converts numeric strings to actual numbers
-      complete: (result) => {  // This function is called when parsing is done
-        // Check for any parsing errors and log them
-        if (result.errors.length > 0) {
-          console.error("Parsing errors:", result.errors);
-          return;
-        }
+      try {
+        const response = await fetch(selectedCsvPath);
+        const text = await response.text();
 
-        // Log data to confirm it's parsed correctly
-        //console.log("Parsed Data:", result.data);
-
-        //Delete stroke from options (no data available for all UK)
-        // setIllnesses(prevIllnesses => {
-        //   if (!prevIllnesses.includes("stroke")) return prevIllnesses;
-        //   return prevIllnesses.filter(illness => illness !== "stroke");
-        // });
-        setIllnesses(prevIllnesses => {
-          if (prevIllnesses.includes("stroke")) return prevIllnesses;
-          const newIllness = "stroke";
-          const indexToInsert = prevIllnesses.length > 0 ? prevIllnesses.length - 1 : 0;
-          const updatedIllnesses = [...prevIllnesses].filter(item => item !== undefined);
-          updatedIllnesses.splice(indexToInsert, 0, newIllness);
-          return updatedIllnesses;
-        });
-
-        // Extract income data from the CSV and filter out empty values
-        //console.log(selectedIllness);
-        const incomes = result.data.filter(item => item[' "Illness"'].trim() === selectedIllness).map(item => item[' "Income"']).filter(Boolean);
-
-        // Extract percentage data from the CSV and filter out empty values
-        const percentages = result.data.filter(item => item[' "Illness"'].trim() === selectedIllness).map(item => item[' "Percent"']).filter(Boolean);
-
-        // Normalize and clean up the data
-        const cleanedData = result.data.filter(item => item[' "Illness"'].trim() === selectedIllness)
-          .map(item => ({
-            Income: item[' "Income"']?.toString(),
-            Percent: parseFloat(item[' "Percent"']?.toString().trim())
-          }));
-
-        setSelectedYearData(cleanedData); // Store the cleaned data in the state
-        const gini = (selectedIllness === "angina") ? 0.3 : 0.35;
-        setGiniCoeff(gini);
-
-        const discRate1 = cleanedData
-          .filter(item => item.Income.trim() === "<18000")
-          .map(item => item.Percent); // Get an array of values
-
-        const discRate2 = cleanedData
-          .filter(item => item.Income.trim() === ">100000")
-          .map(item => item.Percent); // Get an array of values
-
-        // Extract first value from arrays safely
-        const rate1 = discRate1.length > 0 ? discRate1[0] : NaN;
-        const rate2 = discRate2.length > 0 ? discRate2[0] : NaN;
-
-        // Validate and calculate discrepancy rate
-        if (!isNaN(rate1) && !isNaN(rate2) && rate2 !== 0) {
-          setDiscrepancyRate(parseFloat(rate1) / parseFloat(rate2));
-        } else {
-          setDiscrepancyRate(NaN);
-          //console.error("Invalid data: Cannot calculate discrepancy rate.");
-        }
-
-
-        // Update the chart data with parsed years and percentages
-        setChartData1({
-          labels: incomes,  // Labels on the X-axis (years)
-          datasets: [
-            {
-              label: "United Kingdom",  // Label of the dataset (country name)
-              data: percentages,  // Data for the Y-axis (percentages)
-              borderColor: "black",  // Color of the border around the bars
-              backgroundColor: "#BE0000"  // Color of the bars (orange)
+        Papa.parse(text, {
+          header: true,
+          complete: (result) => {
+            if (result.errors.length > 0) {
+              console.error("Parsing errors:", result.errors);
+              return;
             }
-          ]
-        });
 
-        // Set up the chart options (appearance and behavior of the chart)
-        setChartOptions1({
-          maintainAspectRatio: false,  // Disable maintaining the aspect ratio for responsiveness
-          responsive: true,  // Make the chart responsive to the container size
-          plugins: {
-            legend: {
-              position: "top",  // Place the legend at the top
-              display: false  // Hide the legend
-            },
-            title: {
-              display: true,  // Display the chart title
-              text: "Prevalence of " + selectedIllnessCapitalized + " (%) by Income"  // Title text
-            },
-            tooltip: {
-              callbacks: {
-                title: (tooltipItems) => {
-                  return "Income " + tooltipItems[0].label + ": ";
-                },
-                label: (tooltipItem) => {
-                  return tooltipItem.raw + "%";
-                }
+            if (selectedCentre === "all") {
+
+              setIllnesses(prevIllnesses => {
+                if (prevIllnesses.includes("stroke")) return prevIllnesses;
+                const newIllness = "stroke";
+                const indexToInsert = prevIllnesses.length > 0 ? prevIllnesses.length - 1 : 0;
+                const updatedIllnesses = [...prevIllnesses].filter(item => item !== undefined);
+                updatedIllnesses.splice(indexToInsert, 0, newIllness);
+                return updatedIllnesses;
+              });
+
+              // Extract income data from the CSV and filter out empty values
+              // Normalize and clean up the data
+              const cleanedData = result.data.filter(item => item[' "Illness"'].trim() === selectedIllness)
+                .map(item => ({
+                  Income: item[' "Income"']?.toString(),
+                  Percent: parseFloat(item[' "Percent"']?.toString().trim())
+                }));
+
+              setSelectedYearData(cleanedData); // Store the cleaned data in the state
+              const gini = (selectedIllness === "angina") ? 0.3 : 0.35;
+              setGiniCoeff(gini);
+
+              const discRate1 = cleanedData
+                .filter(item => item.Income.trim() === "<18000")
+                .map(item => item.Percent); // Get an array of values
+
+              const discRate2 = cleanedData
+                .filter(item => item.Income.trim() === ">100000")
+                .map(item => item.Percent); // Get an array of values
+
+              // Extract first value from arrays safely
+              const rate1 = discRate1.length > 0 ? discRate1[0] : NaN;
+              const rate2 = discRate2.length > 0 ? discRate2[0] : NaN;
+
+              // Validate and calculate discrepancy rate
+              if (!isNaN(rate1) && !isNaN(rate2) && rate2 !== 0) {
+                setDiscrepancyRate(parseFloat(rate1) / parseFloat(rate2));
+              } else {
+                setDiscrepancyRate(NaN);
+                //console.error("Invalid data: Cannot calculate discrepancy rate.");
               }
+
+              setChartData1({
+                labels: cleanedData.map(item => item.Income),
+                datasets: [{
+                  label: "United Kingdom",
+                  data: cleanedData.map(item => item.Percent),
+                  borderColor: "black",
+                  backgroundColor: "#BE0000"
+                }]
+              });
+
+              setChartOptions1({
+                maintainAspectRatio: false,
+                responsive: true,
+                plugins: {
+                  legend: { display: false },
+                  title: {
+                    display: true,
+                    text: `Prevalence of ${selectedIllnessCapitalized} (%) by Income`
+                  },
+                  tooltip: {
+                    callbacks: {
+                      title: items => `Income ${items[0].label}:`,
+                      label: item => `${item.raw}%`
+                    }
+                  }
+                },
+                scales: {
+                  x: { title: { display: true, text: "Income Bracket (£ Per Year)" } },
+                  y: { title: { display: true, text: "Prevalence of Disease (%)" } }
+                }
+              });
+
+            } else {
+              const incomeCols = Object.keys(result.data[0]).slice(4);
+              const diseaseRow = result.data.find(row => row.cities === selectedCentre && row.conditions === selectedIllness);
+
+              if (!diseaseRow) {
+                console.error("No data for", selectedIllnessCapitalized);
+                return;
+              }
+
+              const percentages = incomeCols.map(col => parseFloat(diseaseRow[col]) * 100);
+
+              setSelectedYearData(result.data.map(item => ({
+                city: item.cities,
+                condition: item.conditions,
+                gini: parseFloat(item.Gini),
+                ...incomeCols.reduce((acc, key) => {
+                  acc[key] = parseFloat(item[key]);
+                  return acc;
+                }, {})
+              })));
+
+              setGiniCoeff(parseFloat(diseaseRow.Gini));
+              const low = parseFloat(diseaseRow['<18000']);
+              const high = parseFloat(diseaseRow['>100000']);
+
+              setDiscrepancyRate(!isNaN(low) && !isNaN(high) && high !== 0 ? low / high : NaN);
+
+              setChartData1({
+                labels: incomeCols,
+                datasets: [{
+                  label: "United Kingdom",
+                  data: percentages,
+                  borderColor: "black",
+                  backgroundColor: "#BE0000"
+                }]
+              });
+
+              setChartOptions1({
+                maintainAspectRatio: false,
+                responsive: true,
+                plugins: {
+                  legend: { display: false },
+                  title: {
+                    display: true,
+                    text: `Prevalence of ${selectedIllnessCapitalized} (%) by Income`
+                  },
+                  tooltip: {
+                    callbacks: {
+                      title: items => `Income ${items[0].label}:`,
+                      label: item => `${parseFloat(item.raw).toFixed(1)}%`
+                    }
+                  }
+                },
+                scales: {
+                  x: { title: { display: true, text: "Income Bracket (£ Per Year)" } },
+                  y: { title: { display: true, text: "Prevalence of Disease (%)" } }
+                }
+              });
             }
           },
-          scales: {
-            x: {
-              title: {
-                display: true,
-                text: "Income Bracket (£ Per Year)"  // Label for X-axis
-              }
-            },
-            y: {
-              title: {
-                display: true,
-                text: "Prevalence of Disease (%)"  // Label for Y-axis
-              }
-            }
-          }
+          error: (err) => console.error("CSV parse error:", err)
         });
+
+      } catch (err) {
+        console.error("Fetch error:", err);
       }
-    });
-  } else {
-    Papa.parse(csvFile, {
-      download: true,  // Downloads the CSV file
-      header: true,  // Treats the first row as the header
-      dynamicTyping: true,  // Converts numeric strings to actual numbers
-      complete: (result) => {  // This function is called when parsing is done
-        // Check for any parsing errors and log them
-        if (result.errors.length > 0) {
-          console.error("Parsing errors:", result.errors);
-          return;
-        }
+    };
 
-        // Log data to confirm it's parsed correctly
-        //console.log("Parsed Data:", result.data);
+    if (selectedIllness) fetchIncomeData();
+  }, [selectedCentre, selectedIllness]);
 
-        // Add stroke to selection options for income graph
-        setIllnesses(prevIllnesses => {
-          if (prevIllnesses.includes("stroke")) return prevIllnesses;
-          const newIllness = "stroke";
-          const indexToInsert = prevIllnesses.length > 0 ? prevIllnesses.length - 1 : 0;
-          const updatedIllnesses = [...prevIllnesses].filter(item => item !== undefined);
-          updatedIllnesses.splice(indexToInsert, 0, newIllness);
-          return updatedIllnesses;
-        });
-
-        // Extract income data from the CSV and filter out empty values
-        const incomes = Object.keys(result.data[0]).slice(4)
-
-        // Extract percentage data from the CSV and filter out empty values
-        const diseaseRow = result.data.find(row => row.cities === selectedCentre && row.conditions === selectedIllness);
-
-        if (!diseaseRow) {
-          console.error("No data found for " + selectedIllnessCapitalized);
-          return;
-        }
-        // Extract all income class values (columns 4 to 8)
-        const percentages = incomes.map(item => diseaseRow[item] * 100);
-
-        // Normalize and clean up the data
-        const cleanedData = result.data.map(item => ({
-          city: item["cities"]?.toString().trim(), // Store city names
-          condition: item["conditions"]?.toString().trim(), // Store medical condition
-          gini: parseFloat(item["Gini"]), // Store Gini coefficient
-          "<18000": parseFloat(item["<18000"]), // Convert prevalence rates to numbers
-          "18-31000": parseFloat(item["18-31000"]),
-          "31-52000": parseFloat(item["31-52000"]),
-          "52-100000": parseFloat(item["52-100000"]),
-          ">100000": parseFloat(item[">100000"])
-        }));
-
-        setSelectedYearData(cleanedData); // Store the cleaned data in the state
-        setGiniCoeff(diseaseRow["Gini"]); // Store Gini coefficient in the state
-        const discRate1 = parseFloat(diseaseRow['<18000']);
-        const discRate2 = parseFloat(diseaseRow['>100000']);
-
-        // Validate and calculate discrepancy rate
-        if (!isNaN(discRate1) && !isNaN(discRate2) && discRate2 !== 0) {
-          setDiscrepancyRate(parseFloat(discRate1) / parseFloat(discRate2));
-        } else {
-          setDiscrepancyRate(NaN);
-          console.error("Invalid data: Cannot calculate discrepancy rate.");
-        }
-
-        // Update the chart data with parsed years and percentages
-        setChartData1({
-          labels: incomes,  // Labels on the X-axis (years)
-          datasets: [
-            {
-              label: "United Kingdom",  // Label of the dataset (country name)
-              data: percentages,  // Data for the Y-axis (percentages)
-              borderColor: "black",  // Color of the border around the bars
-              backgroundColor: "#BE0000"  // Color of the bars (orange)
-            }
-          ]
-        });
-
-        // Set up the chart options (appearance and behavior of the chart)
-        setChartOptions1({
-          maintainAspectRatio: false,  // Disable maintaining the aspect ratio for responsiveness
-          responsive: true,  // Make the chart responsive to the container size
-          plugins: {
-            legend: {
-              position: "top",  // Place the legend at the top
-              display: false  // Hide the legend
-            },
-            title: {
-              display: true,  // Display the chart title
-              text: "Prevalence of " + selectedIllnessCapitalized + " (%) by Income"  // Title text
-            },
-            tooltip: {
-              callbacks: {
-                title: (tooltipItems) => {
-                  return "Income " + tooltipItems[0].label + ": ";
-                },
-                label: (tooltipItem) => {
-                  return parseFloat(tooltipItem.raw).toFixed(1) + "%"; // Truncate percent to 1 decimal place
-                }
-              }
-            }
-          },
-          scales: {
-            x: {
-              title: {
-                display: true,
-                text: "Income Bracket (£ Per Year)"  // Label for X-axis
-              }
-            },
-            y: {
-              title: {
-                display: true,
-                text: "Prevalence of Disease (%)"  // Label for Y-axis
-              }
-            }
-          }
-        });
-      }
-    });
-  }
 
   // Handle centre selection change
   const handleCentreChange = (event) => {
@@ -475,7 +420,7 @@ function UK() {
                   selectedIllness === "heart attack/myocardial infarction"))) && (
                 <div className="info_graf">
                   <div style={{ height: "250px" }}>
-                    <Bar options={chartOptions1} data={chartData1} />
+                    <ResponsiveBarChart options={chartOptions1} data={chartData1} />
                     <p className="p_source">Source</p>
                     <p className="p_source_text">
                       UK Biobank
